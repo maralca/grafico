@@ -1011,7 +1011,7 @@
 							rotulo = rotulos[valorIndex];
 							if(isCartesian){
 								dim = dims[valorIndex];
-								tooltip += "<p>"+rotulo+"<sub>"+dim+"</sub>&nbsp;:&nbsp;"+valor+"<sub>"+unidade+"</sub></p>";
+								tooltip += '<p>'+rotulo+'<span class="sub">'+dim+'</span>&nbsp;:&nbsp;'+valor+'<span class="sub">'+unidade+'</span></p>';
 							}
 							else{
 								if(XtrGraficoUtil.isset(custom) ? XtrGraficoUtil.isset(custom.index) ? custom.index == valorIndex : false : false){
@@ -1024,7 +1024,7 @@
 									valor = XtrGraficoUtil.isset(custom.valor) ? custom.valor : valor;
 								}
 								tooltip = "<p>"+titulo+"&nbsp;:&nbsp;"+rotulo+"</p>"
-								+"<p>"+nome+"&nbsp;:&nbsp;"+valor+"<sub>"+unidade+"</sub></p>";
+								+'<p>'+nome+'&nbsp;:&nbsp;'+valor+'<span class="sub">'+unidade+'</span></p>';
 								tooltips.push(tooltip);
 							}
 						}
@@ -1182,7 +1182,8 @@
 					goOn = minAmountPercent > currentPercent;		
 
 					if(!XtrGraficoUtil.isset(maxSlicesName)){
-						maxSlicesName = "Com menos de "+(minAmountPercent*100)+"%"+" equivalente à "+(minAmountPercent*sum).toFixed(-1)+"<sub>("+serie.unidade+")</sub>";
+						maxSlicesName = "Com menos de "+(minAmountPercent*100)+"%"
+						+' equivalente à '+(minAmountPercent*sum).toFixed(-1)+'<span class="sub">('+serie.unidade+')</span>';
 					}
 
 					sumMin = 0;

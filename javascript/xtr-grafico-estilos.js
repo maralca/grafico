@@ -190,7 +190,6 @@
 			fill = fill == "rgb(0, 0, 0)" ? "rgba(255,255,255,.9)" : fill;
 
 			width = svg.getAttribute("width");
-
 			legendaContainer.style.setProperty("background-color",fill,"important");		
 			legendaContainer.style.setProperty("color",color,"important");	
 			legendaContainer.style.setProperty("width",width+"px");
