@@ -42,7 +42,7 @@
 					+"(" + (valor/sum*100).toFixed(1) + "%)";
 				}
 
-				newLabel.innerHTML = label.innerHTML+ "<sub>("+unidade+")</sub>";
+				newLabel.innerHTML = label.innerHTML+ "&nbsp;("+unidade+")";
 				label.style.setProperty("display","none");
 
 			}
@@ -400,13 +400,13 @@
 
 			tbody = legendaContainer.querySelector("tbody");
 			
-			tbody.style.setProperty("display","flex");
+			tbody.className = tbody.className + "flexbox"
 			tbody.style.setProperty("flex-direction","column-reverse");
 
 			trs = legendaContainer.querySelectorAll("tbody tr");
 			for(trIndex = 0; trs.length > trIndex; trIndex++){
 				tr = trs[trIndex];
-				tr.style.setProperty("display","flex");
+				tr.className = tr.className + "flexbox";
 				tr.style.setProperty("flex-direction","column-reverse");
 			}
 		}

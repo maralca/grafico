@@ -203,7 +203,6 @@
 				+"font-family:'"+xtrGrafico.Default.font+"';"
 			+"}";
 			document.body.appendChild(x);
-			console.log(x);
 		});
 	}
 	

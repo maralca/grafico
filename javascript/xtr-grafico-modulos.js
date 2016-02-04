@@ -510,7 +510,7 @@
 						'geografica/to'
 					],
 					modulo: '',
-					ativo: true
+					ativo: false
 				},
 				{
 					variavel: 'none',
