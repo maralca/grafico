@@ -844,7 +844,7 @@
 					modulo: ''
 				}
 			],
-			mesclagem:[
+			fusoes:[
 				{
 					de: ["columns"],
 					para: ["columns","areas","lines","markeronly"],
