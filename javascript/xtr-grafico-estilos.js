@@ -47,7 +47,7 @@
 
 			}
 		}
-		function overrideLegendIcons(refresh,disabled,center){
+		function overrideLegendIcons(refresh,disabled){
 			if(XtrGraficoUtil.isset(refresh) ? refresh : false)
 				return;
 			var legendaIconeContainers,legendaIconeContainer;
@@ -149,9 +149,7 @@
 				xtrCheckboxNode = xtrCheckbox.node;
 
 				legendaIconeContainer.parentNode.insertBefore(xtrCheckboxNode,legendaIconeContainer);
-				legendaIconeContainer.parentNode.style.setProperty("display","flex");
-				if(center)
-					legendaIconeContainer.parentNode.style.setProperty("justify-content","center");
+				legendaIconeContainer.parentNode.className += "flexbox"; 
 				labelText.setAttribute("for",id);			
 				
 				xtrCheckboxNode.insertBefore(legendaIconeContainer,xtrCheckboxNode.firstChild);
@@ -399,14 +397,12 @@
 
 			tbody = legendaContainer.querySelector("tbody");
 			
-			tbody.className = tbody.className + "flexbox"
-			tbody.style.setProperty("flex-direction","column-reverse");
+			tbody.className += " flexbox column-reverse";
 
 			trs = legendaContainer.querySelectorAll("tbody tr");
 			for(trIndex = 0; trs.length > trIndex; trIndex++){
 				tr = trs[trIndex];
-				tr.className = tr.className + "flexbox";
-				tr.style.setProperty("flex-direction","column-reverse");
+				tr.className += " flexbox column-reverse";
 			}
 		}
 
