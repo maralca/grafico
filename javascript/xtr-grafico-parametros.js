@@ -198,7 +198,6 @@
 				maxLabelSize: 50,
 				enableCache: true
 			}
-
 			axisLabel = {
 				includeZero: false,
 
@@ -224,7 +223,6 @@
 				labels: labels,
 				title: titulos.identificadores
 			}
-
 			axisValue = {
 				includeZero: true,
 
@@ -253,7 +251,6 @@
 				title: titulos.valores
 			}
 				
-				
 			if(localChart.isThisMyScaleType('log')){
 				axisValue.labelFunc = function(x,y,z){
 					if(y <= -1){
@@ -276,7 +273,7 @@
 				axisValue.majorTickStep = 0.25;
 				axisValue.minorTickStep = axisValue.majorTickStep / 5;
 
-				console.info("Escala Justaposição");
+				console.log("Escala Justaposição");
 			}
 			else{
 				axisValue.labelFunc =  function(x,y,z){
@@ -300,17 +297,32 @@
 					axisY.majorTickStep = base10pow(eachElement.delta.y.SIN/10);
 					axisY.minorTickStep = axisY.majorTickStep / 10;
 				}
-				else if(localChart.isThisMyChartType(["linha","area"])){
-					axisValue.from = eachElement.min.y * 0.8;
-					axisValue.to = eachElement.max.y * 1.2;
+				else if(localChart.areOneOfTheseMyChartType(["linha","area"])){
+					if(localChart.isThisMyChartType("empilhada")){
+						axisValue.from = eachElement.first.min.y * 0.8;
+						axisValue.to = eachElement.sumMax.y * 1.2;
+
+						axisValue.min = eachElement.first.min.y;
+						axisValue.max = eachElement.sumMax.y;
+					}
+					else{
+						axisValue.from = eachElement.min.y * 0.8;
+						axisValue.to = eachElement.max.y * 1.2;
+
+						axisValue.min = eachElement.min.y;
+						axisValue.max = eachElement.max.y;
+					}
+					axisLabel.from =  1 - 1/eachElement.pontos;
+					axisLabel.to = eachElement.pontos + 1/eachElement.pontos;
 
 					axisValue.majorTickStep = base10pow(eachElement.delta.y.sin/10);
 					axisValue.minorTickStep = axisValue.majorTickStep / 10;
+					
 				}
 				
 				console.info("Escala Linear");
 			}
-			if(localChart.areOneOfTheseMyChartType(['area','linha','cartesiano'])){
+			if(localChart.areOneOfTheseMyChartType(['linha','cartesiano'])){
 				axisValue.includeZero = false;
 				axisLabel.includeZero = false;
 			}
@@ -325,6 +337,8 @@
 				//axisY.rotation = -90;
 			}
 			else if(localChart.isThisMyChartType('cartesiano')){	
+				titleGap = axisY.titleGap;
+
 				axisX=XtrGraficoUtil.concat(axisX,axisValue);
 				axisY=XtrGraficoUtil.concat(axisY,axisValue);
 

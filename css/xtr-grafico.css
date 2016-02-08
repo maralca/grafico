@@ -23,3 +23,8 @@
 .xtrGrafico + * input[type="checkbox"]{
 	display: none;
 }
+
+span.sub{
+	font-size: .6rem;
+	line-height: .6rem;
+}

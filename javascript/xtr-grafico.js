@@ -152,7 +152,6 @@
 			checkboxes.push(!checked);
 		};
 
-
 		localChart = new SuperChart(compositeData,"plot0");
 
 		if(checkboxJusta.checked)
@@ -181,7 +180,7 @@
 		},
 		Default:{
 			tema: "julie",
-			tipo: "areasempilhadas",
+			tipo: "lines",
 			titulos:{
 				valores: "Amostras",
 				identificadores: "Series"
@@ -201,7 +200,17 @@
 			x.id = id+"_style";
 			x.innerHTML = "#"+id+" *:not(i){"
 				+"font-family:'"+xtrGrafico.Default.font+"';"
+			+"}"
+			+"line:first-child + text{"
+				+" font-size: 16px;"
+				+" font-weight: 600;"
 			+"}";
+			try{
+			document.body.querySelector("line:first-child").x = "250";
+			}
+			catch(e){
+
+			}
 			document.body.appendChild(x);
 		});
 	}

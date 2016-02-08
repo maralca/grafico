@@ -255,7 +255,7 @@
 					ativo: true
 				},
 				{
-					variavel:'blueDusk',
+					variavel:'bluedusk',
 					alias: 'BlueDusk',
 					categoria: [],
 					variacao: [],
@@ -263,7 +263,7 @@
 					ativo: true
 				},
 				{
-					variavel:'cubanShirts',
+					variavel:'cubanshirts',
 					alias: 'CubanShirts',
 					categoria: [],
 					variacao: [],
@@ -311,7 +311,7 @@
 					ativo: true
 				},
 				{
-					variavel:'greySkies',
+					variavel:'greyskies',
 					alias: 'GreySkies',
 					categoria: [],
 					variacao: [],

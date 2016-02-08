@@ -34,8 +34,7 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,percent,scale){
     min = XtrGraficoUtil.minimum(valores);
     sum = XtrGraficoUtil.somatorium(valores)
 
-    xtrTooltip = new XtrTooltip("xtrTooltip");
-    xtrTooltip.setDirection("top")
+    xtrTooltip = new XtrTooltip("tooltip_geochart","top");
 
     grafico = document.getElementById(xtrGrafico.ID_GRAFICO);                    
     grafico.style.setProperty("background","rgba("+parseInt(red*1.5)+","+parseInt(green*1.5)+","+parseInt(blue*1.5)+","+percent+")");
@@ -125,7 +124,7 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,percent,scale){
 
                 tooltipContent = "<p>"+titulos.identificadores+" : "+cidade.nome+"</p>"
                 +"<p>"+serie.titulo+" : "+valor+"</p>";
-                xtrTooltip.addTrigger(cidadeId,{
+                xtrTooltip.addTrigger("#"+cidadeId,{
                     "content": tooltipContent
                 });
 

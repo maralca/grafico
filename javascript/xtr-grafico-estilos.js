@@ -14,15 +14,23 @@
 
 			var newLabel;
 
-			var serie;
+			var serie,series;
 			var rotulos;
 
 			var valores,valor;
 			var sum;
 			var unidade;
+			var pecentText;
 
-			serie = localChart.getSeries().ideal[0];
+			series = localChart.getSeries().ideal;
+			serie = series[0];
+
+			valores = serie.valores;
 			unidade = serie.unidade;
+
+			if(XtrGraficoUtil.isarray(unidade)){
+				unidade = unidade.join(" por ");
+			}
 			
 			labels = legendaContainer.getElementsByClassName("dojoxLegendText");
 			rotulos = localChart.getRotulos();
@@ -31,18 +39,28 @@
 
 				rotulo = rotulos[labelIndex];
 				label = labels[labelIndex];
-				newLabel = label.parentNode.querySelector(".xtrCheckboxLabelText");
 
-				if(localChart.isThisMyChartType("pizza")){
-					valores = serie.valores;
-					sum = XtrGraficoUtil.somatorium(valores);
-					valor = valores[labelIndex];
-
-					label.innerHTML = rotulo + ", contendo no total " + valor
-					+"(" + (valor/sum*100).toFixed(1) + "%)";
+				if(localChart.isThisMyChartType("cartesiano")){
+					valores = series[labelIndex].valores;
+					label.innerHTML += ", "+valores.join(" por ");
 				}
 
-				newLabel.innerHTML = label.innerHTML+ "&nbsp;("+unidade+")";
+				newLabel = label.parentNode.querySelector(".xtrCheckboxLabelText");
+				unidadeText = "<span class='sub'>" + unidade + "</span>";
+				unidadeText2 = "<span class='sub'>(" + unidade + ")</span>";
+				if(localChart.isThisMyChartType("pizza")){
+					sum = XtrGraficoUtil.somatorium(valores);
+					valor = valores[labelIndex];
+					pecentText = (valor/sum*100).toFixed(1);
+					pecentText = "" + (valor/sum*100).toFixed(1) + "%";
+
+					label.innerHTML = rotulo + ",&nbsp;havia&nbsp" + valor + unidadeText + ",&nbsp;"+"equivalente à"+"&nbsp;"+pecentText;					
+				}
+				else{
+					label.innerHTML = label.innerHTML+ "&nbsp;"+unidadeText2;
+				}
+				newLabel.innerHTML = label.innerHTML;
+
 				label.style.setProperty("display","none");
 
 			}

@@ -24,7 +24,8 @@
 			var series;
 			var rotulos;
 			var links;
-			
+			var tipoDado;
+
 			var chart;
 			var chartId;
 
@@ -65,12 +66,16 @@
 
 			superParameter = new SuperParameter(me);
 			superModule = new SuperModule(me);
-
 			digest();
 
 			Input = XtrGraficoUtil.clone(input);
 			if(XtrGraficoUtil.isset(input.alt))
 				Input=input.alt;
+
+
+			if(XtrGraficoUtil.isset(Input.dado)){
+				tipoDado = Input.dado;
+			}
 		   	
 			if(XtrGraficoUtil.isset(Input.tipo)){					
 				setTipo(Input.tipo);
@@ -128,6 +133,7 @@
 					me.getRotulos = getRotulos;
 					me.getLinks = getLinks;
 					me.getTitulos = getTitulos;
+					me.getTipoDado = getTipoDado;
 
 					me.setTipo = setTipo;
 					me.setTema = setTema;
@@ -418,6 +424,17 @@
 						}
 					};
 
+					out.first = {
+						min:{
+							x: mins.x[0],
+							y: mins.y[0]
+						},
+						max:{
+							x: maxs.x[0],
+							y: maxs.y[0]
+						}
+					}
+
 					out.cycle = digestCycle;
 					out.exception = exception;
 					out.byChart = XtrGraficoUtil.isset(chart);
@@ -622,7 +639,7 @@
 					function setEscala(val){
 						if(XtrGraficoUtil.isset(val) ? val!=null && thisSacleTypeExists(val) : false){
 							escala=ajuster(val);
-							if(!areOneOfTheseMyChartType(['colunas','barras']))
+							if(!isThisMyChartType('empilhadas'))
 				   				escala =  "linear";
 
 							digest();
@@ -703,7 +720,13 @@
 
 							digest();
 						}
-				   	}		
+				   	}
+				/////////////////
+				//TIPO DE DADO //
+				/////////////////
+					function getTipoDado(){
+						return tipoDado;
+					}					
 			/////////////////////////
 			//METODOS PARA GRAFICO //
 			/////////////////////////
@@ -981,7 +1004,7 @@
 
 					var rotulo;
 
-					var unidade;
+					var unidade,unidades;
 
 					var valores,valor;
 					var valorIndex;
@@ -999,7 +1022,6 @@
 					titulo = titulos.identificadores;
 					for(serieIndex = 0; series.length > serieIndex; serieIndex++){
 						serie = series[serieIndex];
-						unidade = serie.unidade;
 						tooltips = [];
 
 						valores = serie.formatados;
@@ -1009,9 +1031,14 @@
 						for(valorIndex = 0; valores.length > valorIndex; valorIndex++){
 							valor = valores[valorIndex];
 							rotulo = rotulos[valorIndex];
+							unidade = serie.unidade;
+
 							if(isCartesian){
+								if(XtrGraficoUtil.isarray(unidade)){
+									unidade = unidade[valorIndex];	
+								}							
 								dim = dims[valorIndex];
-								tooltip += '<p>'+rotulo+'<span class="sub">'+dim+'</span>&nbsp;:&nbsp;'+valor+'<span class="sub">'+unidade+'</span></p>';
+								tooltip += '<p>'+rotulo+'<span class="sub">('+dim+')</span>&nbsp;:&nbsp;'+valor+'<span class="sub">'+unidade+'</span></p>';
 							}
 							else{
 								if(XtrGraficoUtil.isset(custom) ? XtrGraficoUtil.isset(custom.index) ? custom.index == valorIndex : false : false){
@@ -1024,7 +1051,7 @@
 									valor = XtrGraficoUtil.isset(custom.valor) ? custom.valor : valor;
 								}
 								tooltip = "<p>"+titulo+"&nbsp;:&nbsp;"+rotulo+"</p>"
-								+'<p>'+nome+'&nbsp;:&nbsp;'+valor+'<span class="sub">'+unidade+'</span></p>';
+								+'<p>'+nome+'&nbsp;:&nbsp;'+valor+'&nbsp;<span class="sub">('+unidade+')</span></p>';
 								tooltips.push(tooltip);
 							}
 						}
@@ -1281,6 +1308,8 @@
 					var pontos,ponto;
 					var pontoIndex;
 
+					var unidades;
+
 					voidSerie = XtrGraficoUtil.clone(series[0]);
 
 					for(property in voidSerie){
@@ -1291,6 +1320,7 @@
 					fittedRotulos = [];
 					pontos = [];
 					formatados = [];
+					unidades = [];
 
 
 					for(rotuloIndex = 0; rotulos.length > rotuloIndex; rotuloIndex++){
@@ -1304,6 +1334,7 @@
 					for(serieIndex = 0; series.length > serieIndex; serieIndex++){
 						serie = series[serieIndex];
 						fittedRotulos.push(serie.nome);
+						unidades.push(serie.unidade);
 
 						fittedValores = serie.valores;
 						fittedFormatados = serie.formatados;
@@ -1326,6 +1357,7 @@
 						fittedSerie = fittedSeries[pontoIndex];
 						fittedSerie.valores = ponto;
 						fittedSerie.formatados = formatado;
+						fittedSerie.unidade = unidades;
 					};
 					series = fittedSeries;
 					rotulos = fittedRotulos;
@@ -1435,6 +1467,8 @@
 
 					var tfs,tfsClone;
 
+					isAsc = XtrGraficoUtil.isset(isAsc) ? isAsc : true;
+
 					for(serieIndex = 0; series.length > serieIndex; serieIndex++){
 						serie = series[serieIndex];
 						valores = serie.valores;
@@ -1462,6 +1496,56 @@
 						tfsClone = XtrGraficoUtil.clone(tfs);
 						formatados.sort(function(){
 							return tfsClone.shift();
+						});
+					}
+				}
+				/**
+				 * ORDENAR, ordena \rotulos de forma crescente ou descrente, consequentemente tambem
+				 * ordena \series\formatados e \series\valores.
+				 *
+				 * @method organizeLabels
+				 *
+				 * @param  {Boolean}      isAsc
+				 *
+				 * @return {void}
+				 */
+				function organizeLabels(isAsc){
+					var rotulo;
+					var rotuloIndex;
+
+					var higher;
+					var order,orderClone;
+
+					var serie;
+					var serieIndex;
+
+					var valores;
+					var formatados;
+
+					order = []
+
+					isAsc = XtrGraficoUtil.isset(isAsc) ? isAsc : true;
+
+					rotulos.sort(function(a,b){
+						higher = isAsc ? a > b : a < b;
+						order.push(higher);
+
+						return higher;
+					});
+
+					for(serieIndex = 0; series.length > serieIndex; serieIndex++){
+						serie = series[serieIndex];
+						valores = serie.valores;
+						formatados = serie.formatados;
+
+						orderClone = XtrGraficoUtil.clone(order);	
+						valores.sort(function(){
+							return orderClone.unshift();
+						});
+
+						orderClone = XtrGraficoUtil.clone(order);							
+						formatados.sort(function(){
+							return orderClone.unshift();
 						});
 					}
 				}
@@ -1530,6 +1614,9 @@
 					fitPieDataInOnePositveSerie();
 					customs = fitPieDataByAmount(0.008);
 					organizeData();
+				}
+				else{
+					organizeLabels();
 				}
 				if(superChart.isThisMyChartType("radar")){
 					fitDataSeriesAsLabels();
