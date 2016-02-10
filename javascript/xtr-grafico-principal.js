@@ -1009,6 +1009,8 @@
 					var valores,valor;
 					var valorIndex;
 
+					var formatados,formatado;
+
 					var titulo;
 					var nome;
 
@@ -1024,12 +1026,14 @@
 						serie = series[serieIndex];
 						tooltips = [];
 
-						valores = serie.formatados;
+						valores = serie.valores;
+						formatados = serie.formatados;
 						nome = serie.nome;
 
 						tooltip = "";
 						for(valorIndex = 0; valores.length > valorIndex; valorIndex++){
 							valor = valores[valorIndex];
+							formatado = formatados[valorIndex];
 							rotulo = rotulos[valorIndex];
 							unidade = serie.unidade;
 
@@ -1051,7 +1055,7 @@
 									valor = XtrGraficoUtil.isset(custom.valor) ? custom.valor : valor;
 								}
 								tooltip = "<p>"+titulo+"&nbsp;:&nbsp;"+rotulo+"</p>"
-								+'<p>'+nome+'&nbsp;:&nbsp;'+valor+'&nbsp;<span class="sub">('+unidade+')</span></p>';
+								+'<p>'+nome+'&nbsp;:&nbsp;'+formatado+'&nbsp;<span class="sub">('+unidade+')</span></p>';
 								tooltips.push(tooltip);
 							}
 						}
@@ -1465,7 +1469,7 @@
 					var valores;
 					var formatados;
 
-					var tfs,tfsClone;
+					var order,orderClone;
 
 					isAsc = XtrGraficoUtil.isset(isAsc) ? isAsc : true;
 
@@ -1474,7 +1478,7 @@
 						valores = serie.valores;
 						formatados = serie.formatados;
 
-						tfs = [];
+						order = [];
 
 						valores.sort(function(a,b){
 							var higher;
@@ -1483,19 +1487,19 @@
 
 							higher = XtrGraficoUtil.isset(isAsc) ? a > b : a < b;
 
-							tfs.push(higher);
+							order.push(higher);
 
 							return higher;
 						});
 
-						tfsClone = XtrGraficoUtil.clone(tfs);
+						orderClone = XtrGraficoUtil.clone(order);
 						rotulos.sort(function(){
-							return tfsClone.shift();
+							return orderClone.shift();
 						});
 
-						tfsClone = XtrGraficoUtil.clone(tfs);
+						orderClone = XtrGraficoUtil.clone(order);
 						formatados.sort(function(){
-							return tfsClone.shift();
+							return orderClone.shift();
 						});
 					}
 				}
@@ -1540,12 +1544,12 @@
 
 						orderClone = XtrGraficoUtil.clone(order);	
 						valores.sort(function(){
-							return orderClone.unshift();
+							return orderClone.shift();
 						});
 
 						orderClone = XtrGraficoUtil.clone(order);							
 						formatados.sort(function(){
-							return orderClone.unshift();
+							return orderClone.shift();
 						});
 					}
 				}

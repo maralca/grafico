@@ -34,7 +34,7 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,percent,scale){
     min = XtrGraficoUtil.minimum(valores);
     sum = XtrGraficoUtil.somatorium(valores)
 
-    xtrTooltip = new XtrTooltip("tooltip_geochart","top");
+    xtrTooltip = new XtrTooltip("tooltip_geochart","cima");
 
     grafico = document.getElementById(xtrGrafico.ID_GRAFICO);                    
     grafico.style.setProperty("background","rgba("+parseInt(red*1.5)+","+parseInt(green*1.5)+","+parseInt(blue*1.5)+","+percent+")");
