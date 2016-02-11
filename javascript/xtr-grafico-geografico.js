@@ -62,7 +62,6 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,percent,scale){
         "parent": gScale
     }
     gTranslate = xtrSVG.append(gTranslateObject);
-        console.log(coordenadas);
 
     for(regiao in coordenadas){
         estados = coordenadas[regiao];

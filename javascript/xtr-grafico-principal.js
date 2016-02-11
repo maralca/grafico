@@ -1162,7 +1162,7 @@
 					
 					removeds.sort(function(a,b){
 						try{
-							return eval(a.rotulo) > eval(b.rotulo);
+							return eval(a.rotulo) - eval(b.rotulo);
 						}
 						catch(e){
 							return a.rotulo > b.rotulo;
@@ -1485,7 +1485,7 @@
 							var higherItem;
 							var higherIndex;
 
-							higher = XtrGraficoUtil.isset(isAsc) ? a > b : a < b;
+							higher = XtrGraficoUtil.isset(isAsc) ? a - b : b - a;
 
 							order.push(higher);
 
@@ -1531,7 +1531,7 @@
 					isAsc = XtrGraficoUtil.isset(isAsc) ? isAsc : true;
 
 					rotulos.sort(function(a,b){
-						higher = isAsc ? a > b : a < b;
+						higher = isAsc ? a - b : b - a;
 						order.push(higher);
 
 						return higher;
