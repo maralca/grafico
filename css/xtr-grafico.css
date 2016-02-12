@@ -2,7 +2,7 @@
 .geoChart > g,
 .geoChart > g > g{
 	stroke: black;
-	stroke-width: 5;		
+	stroke-width: 2;		
 	-webkit-transition: all .4s;
 	-moz-transition: all .4s;
 	-ms-transition: all .4s;
@@ -12,8 +12,9 @@
 .xtrGrafico{
 	min-width:100%; 
 	width:100%; 
-	max-width:100%; 
-	min-height:600px;
+	max-width:100%;
+
+	max-height:420px;
 }
 .xtrGrafico path,
 .xtrGrafico g rect{

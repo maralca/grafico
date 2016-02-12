@@ -2,21 +2,23 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,percent,scale){
     var coordenada;
     var coordenadaIndex;
 
-    var gScale,gTranslate,gCidade;
-    var pathCidade;
+    var gScale,gTranslate;
 
-    var ds,d;
-    var dIndex;
+    var prop1,prop2,prop3,prop3;
+    var obj1,obj2,obj3,obj3;
 
-    var cidade;
-    var cidadeNome,cidadeDs,cidadeId,cidadeIndex;
+    var regiao,estado,municipio;
+    var gBrasil,gRegiao,gEstado,gMunicipio;
+    var pathEstado,pathMunicipio;
 
     var grafico;
 
     var rotulos;
     var serie;
+    var serieTItulo;
     var valores,valor;
     var titulos;
+    var unidade;
 
     var max,min,sum;
 
@@ -25,10 +27,16 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,percent,scale){
     var xtrTooltip;
     var xtrSVG;
 
+    var isbr;
+
+    isbr = false;
+
     rotulos = compositeData.rotulos;
     serie = compositeData.series[0];
     titulos = compositeData.titulos;
     valores = serie.dados;
+    unidade = serie.unidade;
+    serieTItulo = serie.titulo;
 
     max = XtrGraficoUtil.maximum(valores);
     min = XtrGraficoUtil.minimum(valores);
@@ -62,93 +70,76 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,percent,scale){
         "parent": gScale
     }
     gTranslate = xtrSVG.append(gTranslateObject);
+    
+    obj1 = coordenadas;
 
-    for(regiao in coordenadas){
-        estados = coordenadas[regiao];
-        gRegiaoObject = {
-            "id": regiao,
-            "parent": gTranslate
-        }
-        gRegiao = xtrSVG.append(gRegiaoObject);
+    if(XtrGraficoUtil.isobj(obj1["BRASIL"])){
+        gBrasil = {
+            id: "BRASIL",
+            parent: gTranslate
+        };
+        gBrasil = xtrSVG.append(gBrasil);
 
-        for(estado in estados){
+        objBrasil = obj1["BRASIL"];
 
-            cidades = estados[estado];
+        for(prop1 in objBrasil){
+            objRegiao = objBrasil[prop1];
+            regiao = prop1;
 
-            if(XtrGraficoUtil.isobj(cidades)){
-                gEstadoObject = {
-                    "id": estado,
-                    "parent": gRegiao
+            gRegiao = {
+                id: regiao,
+                parent: gBrasil
+            };
+            gRegiao = xtrSVG.append(gRegiao);
+            for(prop2 in objRegiao){
+                obj2 = objRegiao[prop2];
+                if(XtrGraficoUtil.isset(obj2.nome)){ //ESTADO_BRASIL
+                    pathEstado = {
+                        id: obj2.nome,
+                        tag: obj2.tag,
+                        parent: gRegiao,
+                    };
+                    pathEstado[obj2.attr] = obj2.coordenadas;
+                    pathEstado = xtrSVG.append(pathEstado);
                 }
-                gEstado = xtrSVG.append(gEstadoObject);
-            }
-            else{
-                for(rotuloIndex = 0; rotulos.length > rotuloIndex; rotuloIndex++){
-                    rotulo = rotulos[rotuloIndex];
-                    if(rotulo.indexOf(estado) >= 0){
-                        break;
+                else{ //MUNICIPIO_BRASIL
+                    objEstado = obj2;
+                    gEstado = {
+                        id: prop2,
+                        parent: gRegiao
+                    };                        
+                    gEstado = xtrSVG.append(gEstado);
+
+                    for(prop3 in objEstado){
+                        objMunicipio = objEstado[prop3];
+                        gMunicipio = {
+                            id: prop3,
+                            parent: gEstado
+                        };
+                        gMunicipio = xtrSVG.append(gMunicipio);
+                        for(index = 0; objMunicipio.coordenada.length > index; index++){
+                            coordenadas = objMunicipio.coordenada[index];
+                            pathCidade = {
+                                tag: "path",
+                                "d": coordenadas
+                            }
+                            pathCidade = xtrSVG.append(pathCidade);
+                        }
                     }
                 }
-                valor = valores[rotuloIndex]
-                opacity = valor/max;
-                color = "rgba("+red+","+green+","+blue+","+opacity+")";
-
-                pathObject = {
-                    "id": estado,
-                    "tag": "path",
-                    "d": cidades,
-                    "parent": gRegiao,
-                    "class": "geoChartHighlight",
-                    "fill": color
-                }
-                pathEstado = xtrSVG.append(pathObject);
             }
-            for(cidadeId in cidades){
-                cidade = cidades[cidadeId];
-                cidadeNome = cidade.nome+" / "+estado;
-                cidadeCaminhos = cidade.coordenadas;                            
-                cidadeIndex = rotulos.indexOf(cidadeNome);
-                valor = valores[cidadeIndex];
-                valor = XtrGraficoUtil.isset(valor) ? valor : 0;
-
-                gCidadeObject = {
-                    "id": cidadeId,
-                    "data-value": valor,
-                    "data-percent": valor/sum,
-                    "data-nome": cidadeNome,
-                    "class": "geoChartHighlight",
-                    "parent": gEstado
-                };                     
-                gCidade = xtrSVG.append(gCidadeObject);
-
-                tooltipContent = "<p>"+titulos.identificadores+" : "+cidade.nome+"</p>"
-                +"<p>"+serie.titulo+" : "+valor+"</p>";
-                xtrTooltip.addTrigger("#"+cidadeId,{
-                    "content": tooltipContent
-                });
-
-                opacity = valor/max;
-                color = "rgba("+red+","+green+","+blue+","+opacity+")";
-
-                for(dIndex = 0; cidadeCaminhos.length > dIndex; dIndex++){
-                    cidadeCaminho = cidadeCaminhos[dIndex];
-                    pathObject = {
-                        "tag": "path",
-                        "d": cidadeCaminho,
-                        "fill": color,
-                        "parent": gCidade
-                    };
-                    pathCidade = xtrSVG.append(pathObject);
-                };
-            };
         }
-        
+    }
+    if(isbr){
+        gRegiao.setAttrs({
+            "transform": "scale(1,-1)"
+        });
     }
 
     bb = gScale.getBBox();
     aspectRatio = bb.width / bb.height;
-    refX =    grafico.offsetWidth * 0.8 * aspectRatio / bb.width;
-    refY = - grafico.offsetHeight * 0.8 / aspectRatio / bb.height;
+    refX =    grafico.offsetWidth * aspectRatio / bb.width;
+    refY = - grafico.offsetHeight / aspectRatio / bb.height;
 
     if(grafico.offsetHeight > grafico.offsetWidth){
         refY = -refX

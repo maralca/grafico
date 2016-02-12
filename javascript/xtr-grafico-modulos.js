@@ -475,7 +475,8 @@
 					variacao:[
 						'geo',
 						'geografica',
-						'geografica/brasil',
+						'geografica/brasil_estados',
+						'geografica/brasil_municipios',
 						'geografica/norte',
 						'geografica/nordeste',
 						'geografica/centro-oeste',
