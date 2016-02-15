@@ -29,8 +29,6 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
 
     var isbr;
 
-    isbr = false;
-
     rotulos = compositeData.rotulos;
     serie = compositeData.series[0];
     titulo = compositeData.titulos.identificadores;
@@ -45,9 +43,9 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
     xtrTooltip = new XtrTooltip("tooltip_geochart","cima");
 
     grafico = document.getElementById(xtrGrafico.ID_GRAFICO);
-    grafico.className += " xtr alert oceano";
+    tab_exibir = document.getElementById("tab_exibir");
 
-    grafico.
+    console.log(coordenadas);
 
     geoHighlight("geoChart");
     
@@ -86,7 +84,7 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
 
         for(prop1 in objBrasil){
             gBrasil.setAttrs({
-                "transform": "scale(1,-1)"
+                "transform": "scale(1,1)"
             });
 
             objRegiao = objBrasil[prop1];
@@ -97,19 +95,17 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                 parent: gBrasil
             };
             gRegiao = xtrSVG.append(gRegiao);
-
             for(prop2 in objRegiao){
-                obj2 = objRegiao[prop2];
+                obj2 = objRegiao[prop2];                
 
-                rotulosClone = XtrGraficoUtil.clone(rotulos);
+                if(XtrGraficoUtil.isset(obj2.nome)){ //ESTADO_BRASIL   
 
-                rotuloIndex = getRotuloIndex(rotulos,obj2.nome);
-                rotulo = rotulos[rotuloIndex];
-                valor = valores[rotuloIndex];
+                    rotuloIndex = getRotuloIndex(rotulos,obj2.nome);
+                    rotulo = rotulos[rotuloIndex];
+                    valor = valores[rotuloIndex];
 
-                percent = valor / sum * scale;
+                    percent = valor / max * scale;
 
-                if(XtrGraficoUtil.isset(obj2.nome)){ //ESTADO_BRASIL                    
                     objEstado = obj2;
                     pathEstado = {
                         id: objEstado.nome,
@@ -138,6 +134,22 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                             "class": "geoChartHighlight"
                         };
                         gMunicipio = xtrSVG.append(gMunicipio);
+                        if(!objMunicipio.nome){
+                            console.log(prop3);
+                            continue;
+                        }
+                        rotuloIndex = getRotuloIndex(rotulos,objMunicipio.nome);
+                        if(rotuloIndex >= 0){
+                            rotulo = rotulos[rotuloIndex];
+                            valor = valores[rotuloIndex];
+                        }
+                        else{
+                            rotulo = "ERRRRRo";
+                            valor = 0;
+                            console.log(objMunicipio.nome);
+                            console.log(rotulos);
+                        }
+                        percent = valor / max * scale;
 
                         xtrTooltip.addTrigger(gMunicipio,paramTooltip(rotulo,titulo,serieTitulo,valor,unidade));
                         for(index = 0; objMunicipio.coordenadas.length > index; index++){
@@ -239,16 +251,14 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
     */ 
 }
 function getRotuloIndex(rotulos,nome){
-    rotulosClone = XtrGraficoUtil.clone(rotulos);
-    nome = nome.toUpperCase().replace("`","'");
-    do{
-        rotulo = rotulosClone.shift();
-        if(rotulo.toUpperCase().replace("`","'").indexOf(nome) >= 0){
-            rotuloIndex = rotulos.indexOf(rotulo);
-            return rotuloIndex;
-        }
-    }while(rotulosClone.length);
-    return -1;
+    var rotulosClone;
+    var rotulo;
+    var rotuloAux;
+    var rotuloIndex;
+
+    nome = nome.replace("d`","D'");
+    
+    return rotulos.indexOf(nome);
 }
 function paramTooltip(Rotulo,TituloIdentificador,Titulo,Valor,Unidade){
 
@@ -300,8 +310,6 @@ function geoAreaLegenda(compositeData,red,green,blue,n,percent,scale,style){
 
     legenda = document.getElementById(xtrGrafico.ID_LEGENDA);
     table = document.createElement("table");
-    legenda.style.setProperty("background",
-        "rgba("+parseInt(red*1.5)+","+parseInt(green*1.5)+","+parseInt(blue*1.5)+","+percent+")");
 
     legendaAttrs = legenda.attributes;
     for(legendaAttrIndex = 0; legendaAttrs.length > legendaAttrIndex; legendaAttrIndex++){
@@ -354,7 +362,7 @@ function geoAreaLegenda(compositeData,red,green,blue,n,percent,scale,style){
 
         something = first ? "<span> < </span>" : last ? "<span> > </span>" : "";
 
-        label.innerHTML = something+XtrGraficoUtil.convertKMB(max*percent,1,true);
+        label.innerHTML = something+(max*percent).toFixed(0);
 
         svg = document.createElementNS(SVGREF,"svg");
         svg.setAttributeNS(null,"width",(size+3));

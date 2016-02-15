@@ -2,7 +2,7 @@
 .geoChart > g,
 .geoChart > g > g{
 	stroke: black;
-	stroke-width: 1;		
+	stroke-width: 3;		
 	-webkit-transition: all .4s;
 	-moz-transition: all .4s;
 	-ms-transition: all .4s;
