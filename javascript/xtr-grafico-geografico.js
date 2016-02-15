@@ -14,6 +14,7 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
     var grafico;
 
     var rotulos;
+    var rotulosFormatados;
     var serie;
     var serieTitulo;
     var valores,valor;
@@ -29,7 +30,14 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
 
     var isbr;
 
+    var info;
+
+    info = XTR_MUNICIPIOS_INFO;
+
+    console.log(info);
+
     rotulos = compositeData.rotulos;
+    rotulosFormatados = compositeData.rotulosFormatados;
     serie = compositeData.series[0];
     titulo = compositeData.titulos.identificadores;
     valores = serie.dados;
@@ -98,10 +106,10 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
             for(prop2 in objRegiao){
                 obj2 = objRegiao[prop2];                
 
-                if(XtrGraficoUtil.isset(obj2.nome)){ //ESTADO_BRASIL   
+                if(XtrGraficoUtil.isset(obj2.nome)){ //ESTADO_BRASIL  
 
-                    rotuloIndex = getRotuloIndex(rotulos,obj2.nome);
-                    rotulo = rotulos[rotuloIndex];
+                    rotuloIndex = rotulos.indexOf(obj2.name);
+                    rotulo = rotulosFormatados[rotuloIndex];
                     valor = valores[rotuloIndex];
 
                     percent = valor / max * scale;
@@ -134,20 +142,20 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                             "class": "geoChartHighlight"
                         };
                         gMunicipio = xtrSVG.append(gMunicipio);
-                        if(!objMunicipio.nome){
-                            console.log(prop3);
-                            continue;
+
+                        infoObj = getObject(info,"id",prop3.substr(1));
+                        if(!infoObj){
+                            infoObj = getObject(info,"id","1"+prop3.substr(1));
                         }
-                        rotuloIndex = getRotuloIndex(rotulos,objMunicipio.nome);
-                        if(rotuloIndex >= 0){
-                            rotulo = rotulos[rotuloIndex];
+                        if(infoObj){
+                            rotuloIndex = rotulos.indexOf(infoObj.name);
+                            rotulo = rotulosFormatados[rotuloIndex];
                             valor = valores[rotuloIndex];
                         }
                         else{
-                            rotulo = "ERRRRRo";
-                            valor = 0;
-                            console.log(objMunicipio.nome);
-                            console.log(rotulos);
+                            console.warn("Grafico Geografico, cidade de id",prop3.substr(1),"não foi encontrada");
+                            rotulo = "Não encontrado";
+                            valor = "0";
                         }
                         percent = valor / max * scale;
 
@@ -187,9 +195,16 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                         "class": "geoChartHighlight"
                     };
                     gMunicipio = xtrSVG.append(gMunicipio);
-                    rotuloIndex = getRotuloIndex(rotulos,objMunicipio.nome);
-                    rotulo = rotulos[rotuloIndex];
-                    valor = valores[rotuloIndex];
+                    
+                    infoObj = getObject(info,"id",prop3.substr(1));
+                    if(!infoObj){
+                        infoObj = getObject(info,"id","1"+prop3.substr(1));
+                    }
+                    if(infoObj){
+                        rotuloIndex = rotulos.indexOf(infoObj.name);
+                        rotulo = rotulosFormatados[rotuloIndex];
+                        valor = valores[rotuloIndex];
+                    }
 
                     percent = valor / sum * scale;
 
@@ -250,15 +265,9 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
     0.040 ----- 2200
     */ 
 }
-function getRotuloIndex(rotulos,nome){
-    var rotulosClone;
-    var rotulo;
-    var rotuloAux;
-    var rotuloIndex;
 
-    nome = nome.replace("d`","D'");
-    
-    return rotulos.indexOf(nome);
+function getObject(array,property,value){
+    return array.filter(function(item){return item[property] == value})[0];
 }
 function paramTooltip(Rotulo,TituloIdentificador,Titulo,Valor,Unidade){
 
