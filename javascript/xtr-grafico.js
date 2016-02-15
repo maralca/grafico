@@ -195,23 +195,24 @@
 		}
 	}
 	function heritage(id){
+		var x = document.createElement("style");
+		x.id = "heritage_style";
+		x.innerHTML = "#"+id+" *:not(i){"
+			+"font-family:'"+xtrGrafico.Default.font+"';"
+		+"}"
+		+"line:first-child + text{"
+			+" font-size: 16px;"
+			+" font-weight: 600;"
+		+"}";
+		document.body.appendChild(x);
+
 		document.addEventListener("DOMContentLoaded",function(){
-			var x = document.createElement("style");
-			x.id = id+"_style";
-			x.innerHTML = "#"+id+" *:not(i){"
-				+"font-family:'"+xtrGrafico.Default.font+"';"
-			+"}"
-			+"line:first-child + text{"
-				+" font-size: 16px;"
-				+" font-weight: 600;"
-			+"}";
 			try{
-			document.body.querySelector("line:first-child").x = "250";
+				document.body.querySelector("line:first-child").x = "250";
 			}
 			catch(e){
 
 			}
-			document.body.appendChild(x);
 		});
 	}
 	
@@ -305,8 +306,10 @@
 			beforeStart(objAux);
 			var first;
 			var repText,repCount;
+			var lineTypeCount;
 			chart = localChart[0].create(xtrGrafico.ID_GRAFICO);
 			first =  localChart[0];
+			lineTypeCount = 0;
 			for(localChartIndex = 0; localChart.length > localChartIndex; localChartIndex++){
 				localChartItem = localChart[localChartIndex];
 
@@ -325,7 +328,10 @@
 				parameters.plots.push(plot);
 				axis = parameter.getAxis();
 
-				parameters.axis = axis;
+				if(!localChartItem.isThisMyChartType("linhas")){
+					lineTypeCount ++;
+					parameters.axis = axis;
+				}
 			};
 			console.clear(parameters);
 
@@ -360,7 +366,7 @@
 			localChartItem.addExtras();
 			localChartItem.addConnectToPlot();
 			localChartItem.render();
-			
+
 			afterEnd(objAux);
 			
 			localChartItem.addLegend(function(){onLegend(objAux)});

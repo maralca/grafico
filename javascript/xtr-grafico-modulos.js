@@ -848,12 +848,12 @@
 			fusoes:[
 				{
 					de: ["columns"],
-					para: ["columns","areas","lines","markeronly"],
+					para: ["columns","areas","lines"],
 					exceto: [""]					
 				},
 				{
 					de: ["area"],
-					para: ['areas','bars',"columns","lines","markeronly"],
+					para: ['areas','bars',"columns","lines"],
 					exceto: []	
 				},
 				{
@@ -862,14 +862,14 @@
 					exceto: []	
 				},
 				{
-					de: ['pizza','treemap'],
+					de: ['pie','treemap','bubble','markersonly'],
 					para: [],
 					exceto: []
 				},
 				{
 					de: ['line'],
 					para: ["all"],
-					exceto: ['pizza','treemap']
+					exceto: ['pie','treemap',"spider",'bubble','markersonly']
 				},
 			]
 		};

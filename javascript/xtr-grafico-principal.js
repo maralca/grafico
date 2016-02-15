@@ -1564,7 +1564,7 @@
 
 					for(serieIndex = 0; series.length > serieIndex; serieIndex++){
 						serie = series[serieIndex];
-						serie.nome = XtrGraficoUtil.splitter(common,serie.nome,1).trim();					
+						serie.nome = XtrGraficoUtil.splitter(common,serie.nome,1);	
 					}
 				}
 				/**
