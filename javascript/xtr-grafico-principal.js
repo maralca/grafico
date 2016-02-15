@@ -89,7 +89,10 @@
 				setTitulos(Input.titulos);
 			}
 
-			if(XtrGraficoUtil.isset(Input.rotulos)){
+			if(XtrGraficoUtil.isset(Input.rotulosFormatados)){
+				setRotulos(Input.rotulosFormatados);
+			}
+			else if(XtrGraficoUtil.isset(Input.rotulos)){
 				setRotulos(Input.rotulos);
 			}
 
@@ -1468,35 +1471,33 @@
 
 					isAsc = XtrGraficoUtil.isset(isAsc) ? isAsc : true;
 
-					for(serieIndex = 0; series.length > serieIndex; serieIndex++){
-						serie = series[serieIndex];
-						valores = serie.valores;
-						formatados = serie.formatados;
+					serie = series[0];
+					valores = serie.valores;
+					formatados = serie.formatados;
 
-						order = [];
+					order = [];
 
-						valores.sort(function(a,b){
-							var higher;
-							var higherItem;
-							var higherIndex;
+					valores.sort(function(a,b){
+						var higher;
+						var higherItem;
+						var higherIndex;
 
-							higher = XtrGraficoUtil.isset(isAsc) ? a - b : b - a;
+						higher = XtrGraficoUtil.isset(isAsc) ? a - b : b - a;
 
-							order.push(higher);
+						order.push(higher);
 
-							return higher;
-						});
+						return higher;
+					});						
 
-						orderClone = XtrGraficoUtil.clone(order);
-						rotulos.sort(function(){
-							return orderClone.shift();
-						});
+					orderClone = XtrGraficoUtil.clone(order);
+					formatados.sort(function(){
+						return orderClone.shift();
+					});
 
-						orderClone = XtrGraficoUtil.clone(order);
-						formatados.sort(function(){
-							return orderClone.shift();
-						});
-					}
+					orderClone = XtrGraficoUtil.clone(order);
+					rotulos.sort(function(){
+						return orderClone.shift();
+					});
 				}
 				/**
 				 * ORDENAR, ordena \rotulos de forma crescente ou descrente, consequentemente tambem

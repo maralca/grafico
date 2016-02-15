@@ -341,8 +341,7 @@
 							
 							style.onload = function(){
 
-								var rotulos = compositeDataHandler.current().rotulos;
-								var rotulos = compositeDataHandler.current().rotulos;
+								var rotulos = localChart.getRotulos();
 								for(rotuloIndex = 0; rotulos.length > rotuloIndex; rotuloIndex++){
 									chart.fireEvent(chartSerie.name,"onmouseover",rotuloIndex);							
 								}
@@ -382,7 +381,7 @@
 						chart.fireEvent(chartSerie.name,"onmouseout",index);
 					}
 					else{
-						var rotulos = compositeDataHandler.current().rotulos;
+						var rotulos = localChart.getRotulos();
 						for(rotuloIndex = 0; rotulos.length > rotuloIndex; rotuloIndex++){
 							chart.fireEvent(chartSerie.name,"onmouseout",rotuloIndex);
 						}
