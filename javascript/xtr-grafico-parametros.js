@@ -186,7 +186,7 @@
 				titleOrientation: "away",
 				titleFont: "bold 12pt "+xtrGrafico.Default.font,
 				titleGap: 12,
-				maxLabelSize: 50,
+				maxLabelSize: 60,
 				enableCache: true
 			}
 			axisY = {
@@ -195,7 +195,7 @@
 				titleOrientation: "axis",
 				titleFont: "bold 12pt "+xtrGrafico.Default.font,
 				titleGap: 24,
-				maxLabelSize: 50,
+				maxLabelSize: 60,
 				enableCache: true
 			}
 			axisLabel = {
@@ -314,11 +314,10 @@
 					}
 					axisLabel.from =  1 - 1/eachElement.pontos;
 					axisLabel.to = eachElement.pontos + 1/eachElement.pontos;
+				}			
 
-					axisValue.majorTickStep = base10pow(eachElement.delta.y.sin/10);
-					axisValue.minorTickStep = axisValue.majorTickStep / 10;
-					
-				}
+				axisValue.majorTickStep = base10pow(eachElement.delta.y.sin/10);
+				axisValue.minorTickStep = axisValue.majorTickStep / 10;
 				
 				console.info("Escala Linear");
 			}

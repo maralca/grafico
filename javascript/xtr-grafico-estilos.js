@@ -301,6 +301,10 @@
 						style.innerHTML += selector+":hover,"+selector+".hover{"
 							+"fill:"+XtrGraficoUtil.color.blend(fill,xtrGrafico.Default.hover.fill,1)+";"
 							+"stroke:"+xtrGrafico.Default.hover.stroke+";"
+							+"-webkit-transition: all 0.6s;"
+							+"-moz-transition: all 0.6s;"
+							+"-ms-transition: all 0.6s;"
+							+"-o-transition: all 0.6s;"
 							+"transition: all 0.6s;"
 						+"}";
 					}
@@ -325,8 +329,36 @@
 					chartSerie = chartSeries[0];
 					index = refIndex;
 				}
-				if(isPossibleFireEvent && checked){
-					chart.fireEvent(chartSerie.name,"onmouseover",index);
+				if(checked){
+					if(isPossibleFireEvent){
+						chart.fireEvent(chartSerie.name,"onmouseover",index);
+					}
+					else{
+						style = document.getElementById('style_dijit_forceMouseOver');
+						if(style == null){
+							style = document.createElement("style");
+							style.id = 'style_dijit_forceMouseOver';
+							
+							style.onload = function(){
+
+								var rotulos = compositeDataHandler.current().rotulos;
+								var rotulos = compositeDataHandler.current().rotulos;
+								for(rotuloIndex = 0; rotulos.length > rotuloIndex; rotuloIndex++){
+									chart.fireEvent(chartSerie.name,"onmouseover",rotuloIndex);							
+								}
+							}
+							style.innerHTML = ".dijitTooltip {"
+							+"display: none !important;"
+							+"opacity: 0 !important;"
+							+"position: absolute !important;"
+							+"left: - 50000px !important;"
+							+"top:  - 50000px !important;"
+							+"width: 0px !important;"
+							+"height: 0px !important;"
+
+							document.body.appendChild(style);
+						}
+					}
 					over = true;
 				}
 			}
@@ -345,8 +377,20 @@
 					chartSerie = chartSeries[0];
 					index = refIndex;
 				}
-				if(isPossibleFireEvent && over){
-					chart.fireEvent(chartSerie.name,"onmouseout",index);
+				if(over){
+					if(isPossibleFireEvent){
+						chart.fireEvent(chartSerie.name,"onmouseout",index);
+					}
+					else{
+						var rotulos = compositeDataHandler.current().rotulos;
+						for(rotuloIndex = 0; rotulos.length > rotuloIndex; rotuloIndex++){
+							chart.fireEvent(chartSerie.name,"onmouseout",rotuloIndex);
+						}
+						var style = document.getElementById("style_dijit_forceMouseOver");
+						if(style != null){
+							style.remove();
+						}
+					}
 					over = false;
 				}
 			}

@@ -14,8 +14,9 @@
 	width:100%; 
 	max-width:100%;
 
-	max-width:100%; 
-	min-height:600px;
+	max-height:525px; 
+	height:525px; 
+	min-height:525px;
 }
 .xtrGrafico path,
 .xtrGrafico g rect{
