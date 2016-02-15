@@ -1209,7 +1209,7 @@
 
 					if(!XtrGraficoUtil.isset(maxSlicesName)){
 						maxSlicesName = "Com menos de "+(minAmountPercent*100)+"%"
-						+' equivalente à '+(minAmountPercent*sum).toFixed(-1)+'<span class="sub">('+serie.unidade+')</span>';
+						+' equivalente à '+(minAmountPercent*sum).toFixed(0)+'<span class="sub">('+serie.unidade+')</span>';
 					}
 
 					sumMin = 0;
