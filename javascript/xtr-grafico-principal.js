@@ -113,7 +113,7 @@
 		/////////////////////
 			function digest(){
 				if(digestEnable){
-					console.info("Digest of SuperChart was request by",arguments.callee.caller);				
+					// console.info("Digest of SuperChart was request by",arguments.callee.caller);				
 					//console.trace();
 
 					me.toParameter = toParameter;
@@ -442,7 +442,7 @@
 					out.exception = exception;
 					out.byChart = XtrGraficoUtil.isset(chart);
 
-					console.info(out);
+					// console.info(out);
 					return out;
 				}	
 			//////////////////////////////
@@ -924,7 +924,10 @@
 			rawSeries = superChart.getSeries().raw;
 			rotulos = superChart.getRotulos();
 			titulos = superChart.getTitulos();
-			escala = SuperModule().getDojoObject(superChart.getEscala(),"escalas");
+			
+			escala = new SuperModule();
+			escala = escala.getDojoObject(superChart.getEscala(),"escalas");
+
 			fitSeriesToIdeal(mascara);
 
 			this.run = run;

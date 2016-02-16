@@ -1148,16 +1148,15 @@
 			return filtrado;
 		}
 
-
-			this.getDojo = getDojo;
-			this.getModule = getModule;
-			this.getVariable = getVariable;
-			this.getDojoObjectByVariable = getDojoObjectByVariable;
-			this.getDojoObjectByAlias = getDojoObjectByAlias;
-			this.getDojoObject = getDojoObject;
-			this.getRequired = getRequired;
-			this.getDojoObjectByCategory = getDojoObjectByCategory;
-			this.getDojoObjectByCategoryExaclty = getDojoObjectByCategoryExaclty;
+		this.getDojo = getDojo;
+		this.getModule = getModule;
+		this.getVariable = getVariable;
+		this.getDojoObjectByVariable = getDojoObjectByVariable;
+		this.getDojoObjectByAlias = getDojoObjectByAlias;
+		this.getDojoObject = getDojoObject;
+		this.getRequired = getRequired;
+		this.getDojoObjectByCategory = getDojoObjectByCategory;
+		this.getDojoObjectByCategoryExaclty = getDojoObjectByCategoryExaclty;
 
 		return this;
 	}

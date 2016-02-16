@@ -2,18 +2,25 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
     var coordenada;
     var coordenadaIndex;
 
-    var gScale,gTranslate;
-
     var prop1,prop2,prop3,prop3;
     var obj1,obj2,obj3,obj3;
 
+    var objBrasil,objEstado,objRegiao,objMunicipio;
+
     var regiao,estado,municipio;
-    var gBrasil,gRegiao,gEstado,gMunicipio;
+    var gScale,gTranslate,gBrasil,gRegiao,gEstado,gMunicipio;
     var pathEstado,pathMunicipio;
 
-    var grafico;
+    var boundingScale,boundingGrafico;
+    var aspectRatio;
+    var refX,refY;
+    var factorX,factorY;
 
-    var rotulos;
+    var grafico;
+    var tab_exibir;
+
+    var rotulos,rotulo;
+    var titulo;
     var rotulosFormatados;
     var serie;
     var serieTitulo;
@@ -21,20 +28,20 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
     var titulos;
     var unidade;
 
+    var rotuloIndex;
+    var index;
+
     var max,min,sum;
+    var percent;
 
     var color,opacity;
 
     var xtrTooltip;
     var xtrSVG;
 
-    var isbr;
-
-    var info;
+    var info,infoObj;
 
     info = XTR_MUNICIPIOS_INFO;
-
-    console.log(info);
 
     rotulos = compositeData.rotulos;
     rotulosFormatados = compositeData.rotulosFormatados;
@@ -53,11 +60,9 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
     grafico = document.getElementById(xtrGrafico.ID_GRAFICO);
     tab_exibir = document.getElementById("tab_exibir");
 
-    console.log(coordenadas);
-
     geoHighlight("geoChart");
     
-    svgObj = {
+    xtrSVG = {
         "id": "geoChart",
         "class": "geoChart",
         "width": grafico.offsetWidth,
@@ -65,64 +70,66 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
         "viewBox": "0 0 "+grafico.offsetWidth+" "+grafico.offsetHeight,
         "preserveAspectRatio": "xMinYMin"                  
     };                   
-    xtrSVG = new XtrSVG(svgObj,xtrGrafico.ID_GRAFICO);
+    xtrSVG = new XtrSVG(xtrSVG,xtrGrafico.ID_GRAFICO);
 
 
-    gScaleObject = {
+    gScale = {
         "id": "geoChartScale"
     }
-    gScale = xtrSVG.append(gScaleObject);     
+    gScale = xtrSVG.append(gScale);     
 
-    gTranslateObject = {
+    gTranslate = {
         "id": "geoChartTranslate",
         "parent": gScale
     }
-    gTranslate = xtrSVG.append(gTranslateObject);
+    gTranslate = xtrSVG.append(gTranslate);
     
     obj1 = coordenadas;
 
     if(XtrGraficoUtil.isobj(obj1["BRASIL"])){
         gBrasil = {
             id: "BRASIL",
-            parent: gTranslate
+            parent: gTranslate,
+            "class": "brasil"
         };
         gBrasil = xtrSVG.append(gBrasil);
 
         objBrasil = obj1["BRASIL"];
 
         for(prop1 in objBrasil){
-            gBrasil.setAttrs({
-                "transform": "scale(1,1)"
-            });
 
             objRegiao = objBrasil[prop1];
             regiao = prop1;
 
             gRegiao = {
                 id: regiao,
-                parent: gBrasil
+                parent: gBrasil,
+                "class": "regiao"
             };
             gRegiao = xtrSVG.append(gRegiao);
             for(prop2 in objRegiao){
-                obj2 = objRegiao[prop2];                
+                obj2 = objRegiao[prop2];
+                if(XtrGraficoUtil.isset(obj2.coordenadas)){ //ESTADO_BRASIL  
+                    gBrasil.setAttrs({
+                        "transform": "scale(1,-1)"
+                    });
 
-                if(XtrGraficoUtil.isset(obj2.nome)){ //ESTADO_BRASIL  
-
-                    rotuloIndex = rotulos.indexOf(obj2.name);
+                    rotuloIndex = rotulos.indexOf(prop2);
                     rotulo = rotulosFormatados[rotuloIndex];
                     valor = valores[rotuloIndex];
-
-                    percent = valor / max * scale;
+                    percent = valor / max;
 
                     objEstado = obj2;
                     pathEstado = {
-                        id: objEstado.nome,
+                        id: prop2,
                         tag: objEstado.tag,
                         parent: gRegiao,
+                        "data-value":valor,
+                        "data-percent": percent,
                         fill: "rgba("+red+","+green+","+blue+","+percent+")",
-                        "class": "geoChartHighlight"
+                        "class": "estado geoChartHighlight"
                     };
-                    pathEstado[objEstado.attr] = objEstado.coordenada;
+                    pathEstado[objEstado.attr] = objEstado.coordenadas;
                     pathEstado = xtrSVG.append(pathEstado);
 
                     xtrTooltip.addTrigger(pathEstado,paramTooltip(rotulo,titulo,serieTitulo,valor,unidade));
@@ -131,7 +138,8 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                     objEstado = obj2;
                     gEstado = {
                         id: prop2,
-                        parent: gRegiao
+                        parent: gRegiao,
+                        "class": "estado"
                     };                        
                     gEstado = xtrSVG.append(gEstado);
                     for(prop3 in objEstado){
@@ -162,12 +170,12 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                         xtrTooltip.addTrigger(gMunicipio,paramTooltip(rotulo,titulo,serieTitulo,valor,unidade));
                         for(index = 0; objMunicipio.coordenadas.length > index; index++){
                             coordenadas = objMunicipio.coordenadas[index];
-                            pathCidade = {
+                            pathMunicipio = {
                                 tag: "path",
                                 "d": coordenadas,
                                 fill: "rgba("+red+","+green+","+blue+","+percent+")"
                             }
-                            pathCidade = xtrSVG.append(pathCidade);
+                            pathMunicipio = xtrSVG.append(pathMunicipio);
                         }
                     }
                 }
@@ -183,7 +191,8 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                 objMunicipios = objEstado[nomeEstado];
                 gEstado = {
                     id: nomeEstado,
-                    parent: gTranslate
+                    parent: gTranslate,
+                    "class": "estado"
                 };
 
                 gEstado = xtrSVG.append(gEstado);
@@ -192,13 +201,13 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                     gMunicipio = {
                         id: idMunicipio,
                         parent: gEstado,
-                        "class": "geoChartHighlight"
+                        "class": "municipio"
                     };
                     gMunicipio = xtrSVG.append(gMunicipio);
                     
-                    infoObj = getObject(info,"id",prop3.substr(1));
+                    infoObj = getObject(info,"id",idMunicipio.substr(1));
                     if(!infoObj){
-                        infoObj = getObject(info,"id","1"+prop3.substr(1));
+                        infoObj = getObject(info,"id","1"+idMunicipio.substr(1));
                     }
                     if(infoObj){
                         rotuloIndex = rotulos.indexOf(infoObj.name);
@@ -212,6 +221,8 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                         caminho = objMunicipio.coordenadas[index];
                         pathMunicipio = {
                             tag: objMunicipio.tag,
+                            "class": " municipio geoChartHighlight",
+
                             parent: gMunicipio,
                             fill: "rgba("+red+","+green+","+blue+","+percent+")"
                         };
@@ -222,17 +233,14 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                 }
             }
         }
-
     }
 
-    bb = gScale.getBBox();
+    boundingScale = gScale.getBBox();
 
-    bounding = grafico.getBoundingClientRect();
+    aspectRatio = boundingScale.width / boundingScale.height;
 
-    aspectRatio = bb.width / bb.height;
-
-    refX =   grafico.offsetWidth  * 0.9 * aspectRatio / bb.width;
-    refY = - grafico.offsetHeight * 0.9 / aspectRatio / bb.height;
+    refX =   grafico.offsetWidth  * 0.9 * aspectRatio / boundingScale.width;
+    refY = - grafico.offsetHeight * 0.9 / aspectRatio / boundingScale.height;
 
     if(grafico.offsetHeight > grafico.offsetWidth){
         refY = -refX
@@ -245,8 +253,8 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
         "transform": "matrix("+refX+" 0 0 "+refY+" 0 0"+")"
     });
     
-    factorX = Math.floor(bb.x) * (-1);
-    factorY = Math.floor(bb.y + bb.height) * (-1);
+    factorX = Math.floor(boundingScale.x) * (-1);
+    factorY = Math.floor(boundingScale.y + boundingScale.height) * (-1);
 
     gTranslate.setAttrs({
         "transform": "translate("+ factorX +"," + factorY +")"
@@ -289,14 +297,20 @@ function geoAreaLegenda(compositeData,red,green,blue,n,percent,scale,style){
     var legendaAttrs,legendaAttr;
     var legendaAttrIndex;
 
-    var svg;                
+    var svg;
+
+    var label;
+
     var defs,rect,text;
 
     var series,serie;
-    var sum;
-    var max,min;
+
+    var sum,max,min;
 
     var table,tr,td,div;
+
+    var style;
+    var styleProp,styleValue;
 
     var fill;
 
@@ -326,16 +340,15 @@ function geoAreaLegenda(compositeData,red,green,blue,n,percent,scale,style){
         table.setAttribute(legendaAttr,legenda.getAttribute(legendaAttr));
     };
     if(XtrGraficoUtil.isset(style)){
-        for(styProp in style){
-            styVal = style[styProp];
-            table.style.setProperty(styProp,styVal);
+        for(styleProp in style){
+            styleValue = style[styleProp];
+            table.style.setProperty(styleProp,styleValue);
         }
     }
     table.style.setProperty("width","100%");
 
     legenda.parentNode.appendChild(table);
     legenda.remove();
-    i = 1;
 
     sum = sum.toString();
 
@@ -345,14 +358,14 @@ function geoAreaLegenda(compositeData,red,green,blue,n,percent,scale,style){
     fs = parseFloat(fs);
     sum = fs * Math.pow(10,sumRoundSize);
 
-    max2min = max - min;
-    max2minEach = max2min/n;
+    var max2min = max - min;
+    var max2minEach = max2min/n;
     percentInicial = 0.0125;
     percent = percentInicial;
 
     while(percent <= 1){
-        first = percent == percentInicial;
-        last = percent+eachPercent > 1;
+        var first = percent == percentInicial;
+        var last = percent+eachPercent > 1;
 
         tr = document.createElement("tr");                   
 
@@ -369,7 +382,7 @@ function geoAreaLegenda(compositeData,red,green,blue,n,percent,scale,style){
         label = document.createElement("label");
         label.className = "dojoxLegendText";
 
-        something = first ? "<span> < </span>" : last ? "<span> > </span>" : "";
+        var something = first ? "<span> < </span>" : last ? "<span> > </span>" : "";
 
         label.innerHTML = something+(max*percent).toFixed(0);
 
@@ -403,7 +416,7 @@ function geoAreaLegenda(compositeData,red,green,blue,n,percent,scale,style){
 function geoHighlight(id){
     var seletor;
     var style;
-
+    
     seletor = "g.geoChartHighlight:hover path,path.geoChartHighlight:hover";
 
     style = document.createElement("style");

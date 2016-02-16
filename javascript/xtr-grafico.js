@@ -179,7 +179,7 @@
 			}
 		},
 		Default:{
-			tema: "julie",
+			tema: "harmony",
 			tipo: "lines",
 			titulos:{
 				valores: "Amostras",

@@ -1,13 +1,15 @@
-.geoChart path,
-.geoChart > g,
-.geoChart > g > g{
-	stroke: black;
-	stroke-width: 3;		
+.geoChart path{
+	stroke:#000000;
+	stroke-miterlimit:50;
+	stroke-width: 3px;
+
 	-webkit-transition: all .4s;
 	-moz-transition: all .4s;
 	-ms-transition: all .4s;
 	-o-transition: all .4s;
 	transition: all .4s;
+}
+.geoChart .geoChartHighlight{	
 }
 .xtrGrafico{
 	min-width:100%; 

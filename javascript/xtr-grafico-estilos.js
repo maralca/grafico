@@ -46,8 +46,8 @@
 				}
 
 				newLabel = label.parentNode.querySelector(".xtrCheckboxLabelText");
-				unidadeText = "<span class='sub'>" + unidade + "</span>";
-				unidadeText2 = "<span class='sub'>(" + unidade + ")</span>";
+				var unidadeText = "<span class='sub'>" + unidade + "</span>";
+				var unidadeText2 = "<span class='sub'>(" + unidade + ")</span>";
 				if(localChart.isThisMyChartType("pizza")){
 					sum = XtrGraficoUtil.somatorium(valores);
 					valor = valores[labelIndex];
@@ -265,12 +265,13 @@
 			isPossibleFireEvent = localChart.areOneOfTheseMyChartType(['pizza','cartesiano']);
 
 			checkboxes = legendaContainer.firstChild.getElementsByClassName("xtrCheckbox");
-			//console.log(chartSeries);
-			style = document.getElementById("style");
+
+			style = document.getElementById("style_highlight");
 			if(style)
 				style.remove();
+
 			style = document.createElement("style");
-			style.id = "style"
+			style.id = "style_highlight"
 			document.body.appendChild(style);
 			indexes = {};
 			refIndexes = {};
@@ -294,13 +295,22 @@
 					elementsContainer = getElements(index,true,isPie);
 
 					auxRefIndex = isPie ? checkedCounter : refIndex+1;
-
-					selector = elementsContainer.tagName+":nth-child("+auxRefIndex+") > ";	
-
+					selector = elementsContainer.tagName+" > *";
+					
 					if(fill != null){
-						style.innerHTML += selector+":hover,"+selector+".hover{"
-							+"fill:"+XtrGraficoUtil.color.blend(fill,xtrGrafico.Default.hover.fill,1)+";"
-							+"stroke:"+xtrGrafico.Default.hover.stroke+";"
+
+						for(var t =0; elementsContainer.childNodes.length  > t ; t++){
+							elementsContainer.childNodes[t].setAttribute("data-default-fill",fill);
+							elementsContainer.childNodes[t].addEventListener("mouseover",function(){
+								this.setAttribute("class","hover");
+							});
+							elementsContainer.childNodes[t].addEventListener("mouseout",function(){
+								this.setAttribute("class","");
+							});
+						}
+						style.innerHTML += selector+".hover{"
+							+"fill:"+XtrGraficoUtil.color.blend(fill,xtrGrafico.Default.hover.fill,0.5)+";"
+							+"stroke:"+XtrGraficoUtil.color.blend(fill,xtrGrafico.Default.hover.fill,0.6)+";"
 							+"-webkit-transition: all 0.6s;"
 							+"-moz-transition: all 0.6s;"
 							+"-ms-transition: all 0.6s;"
@@ -308,7 +318,6 @@
 							+"transition: all 0.6s;"
 						+"}";
 					}
-
 					checkbox.addEventListener("mouseover",forceMouseOver,true);
 					checkbox.addEventListener("mouseout",forceMouseOut,true);
 				}
@@ -433,11 +442,15 @@
 			function getFill(index,isPie){
 				var fill;
 
-				if(!isPie)
+				if(!isPie){
 					fill = chartSeries[index].dyn.fill;
-				else
+					if(!fill){
+						fill = chartSeries[index].dyn.markerFill;
+					}
+				}
+				else{
 					fill = chartSeries[0].chart.stack[0].dyn[index].fill;
-
+				}
 				if(fill==null)
 					return null;
 
