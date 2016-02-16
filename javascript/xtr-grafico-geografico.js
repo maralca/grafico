@@ -157,8 +157,14 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                         }
                         if(infoObj){
                             rotuloIndex = rotulos.indexOf(infoObj.name);
-                            rotulo = rotulosFormatados[rotuloIndex];
-                            valor = valores[rotuloIndex];
+                            if(rotuloIndex >= 0){                     
+                                rotulo = rotulosFormatados[rotuloIndex];
+                                valor = valores[rotuloIndex];
+                            }
+                            else{
+                                rotulo = infoObj.name + "&nbsp;<span class='sub'>(Não Consta)</span>";
+                                valor = "0";
+                            }
                         }
                         else{
                             console.warn("Grafico Geografico, cidade de id",prop3.substr(1),"não foi encontrada");
@@ -211,8 +217,19 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                     }
                     if(infoObj){
                         rotuloIndex = rotulos.indexOf(infoObj.name);
-                        rotulo = rotulosFormatados[rotuloIndex];
-                        valor = valores[rotuloIndex];
+                        if(rotuloIndex >= 0){                     
+                            rotulo = rotulosFormatados[rotuloIndex];
+                            valor = valores[rotuloIndex];
+                        }
+                        else{
+                            rotulo = infoObj.name + "&nbsp;<span class='sub'>(Não Consta)</span>";
+                            valor = "0";
+                        }
+                    }                    
+                    else{
+                        console.warn("Grafico Geografico, cidade de id",prop3.substr(1),"não foi encontrada");
+                        rotulo = "Não encontrado";
+                        valor = "0";
                     }
 
                     percent = valor / sum * scale;
