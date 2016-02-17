@@ -1048,7 +1048,7 @@
 									unidade = unidade[valorIndex];	
 								}							
 								dim = dims[valorIndex];
-								tooltip += '<p>'+rotulo+'<span class="sub">('+dim+')</span>&nbsp;:&nbsp;'+valor+'<span class="sub">'+unidade+'</span></p>';
+								tooltip += '<p>'+rotulo+'<span class="sub">('+dim+')</span>:&nbsp;'+valor+'<span class="sub">'+unidade+'</span></p>';
 							}
 							else{
 								if(XtrGraficoUtil.isset(custom) ? XtrGraficoUtil.isset(custom.index) ? custom.index == valorIndex : false : false){
@@ -1060,8 +1060,8 @@
 									nome = XtrGraficoUtil.isset(custom.nome) ? custom.nome : nome;
 									valor = XtrGraficoUtil.isset(custom.valor) ? custom.valor : valor;
 								}
-								tooltip = "<p>"+titulo+"&nbsp;:&nbsp;"+rotulo+"</p>"
-								+'<p>'+nome+'&nbsp;:&nbsp;'+formatado+'&nbsp;<span class="sub">('+unidade+')</span></p>';
+								tooltip = "<p>"+titulo+":&nbsp;"+rotulo+"</p>"
+								+'<p>'+nome+':&nbsp;'+formatado+'<span class="sub">'+unidade+'</span></p>';
 								tooltips.push(tooltip);
 							}
 						}

@@ -365,8 +365,7 @@
 				chart: XtrGraficoUtil.isset(dojoElement) ? dojoElement : localChart.getChart(),
 				horizontal: Horizontal,
 				style:{
-					"font": "11pt "+xtrGrafico.Default.font,
-					"letter-spacing": "1px"
+					"font": "11pt "+xtrGrafico.Default.font
 				}
 			}
 
