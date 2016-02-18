@@ -253,10 +253,6 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
     }
 
     var BBoxScale = gScale.getBBox();
-    boundingScale = gScale.getBoundingClientRect();
-
-    var unitPerPxWidth = BBoxScale.width / boundingScale.width; // SVGunit per px
-    var unitPerPxHeight = BBoxScale.height / boundingScale.height; // SVGunit per px
 
     aspectRatio = BBoxScale.width / BBoxScale.height;
 
@@ -272,13 +268,23 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
 
     gScale.setAttrs({
         "transform": "matrix("+refX+" 0 0 "+refY+" 0 0"+")"
-    });    
+    });
+
+    boundingScale = gScale.getBoundingClientRect();
+
+    var unitPerPxWidth = BBoxScale.width / boundingScale.width; // SVGunit per px
+    var unitPerPxHeight = BBoxScale.height / boundingScale.height; // SVGunit per px
+    
+    var svgBounding = xtrSVG._.getBoundingClientRect();
+
+    var restWidth = svgBounding.width - boundingScale.width;
+    var restHeight = svgBounding.height - boundingScale.height;
     
     factorX = Math.floor(BBoxScale.x) * (-1);
-    factorX = factorX + xtrSVG._.getBoundingClientRect().width * unitPerPxWidth;
+    factorX = factorX + restWidth * unitPerPxWidth / 2;
 
     factorY = Math.floor(BBoxScale.y + BBoxScale.height) * (-1);
-    factorY = factorY - xtrSVG._.getBoundingClientRect().height * unitPerPxHeight;
+    factorY = factorY - restHeight * unitPerPxHeight / 2;
 
     gTranslate.setAttrs({
         "transform": "translate("+ factorX +"," + factorY +")"
