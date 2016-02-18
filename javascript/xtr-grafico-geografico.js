@@ -19,6 +19,7 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
     var grafico;
     var tab_exibir;
 
+    var links;
     var rotulos,rotulo;
     var titulo;
     var rotulosFormatados;
@@ -43,6 +44,7 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
 
     info = XTR_MUNICIPIOS_INFO;
 
+    links = compositeData.links;
     rotulos = compositeData.rotulos;
     rotulosFormatados = compositeData.rotulosFormatados;
     serie = compositeData.series[0];
@@ -133,6 +135,20 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                     pathEstado = xtrSVG.append(pathEstado);
                     valor = valor.toFixed(3);
                     xtrTooltip.addTrigger(pathEstado,paramTooltip(rotulo,titulo,serieTitulo,valor,unidade));
+                    pathEstado.setAttribute("data-index",rotuloIndex);
+                    pathEstado.addEventListener("click",function(){
+                        var link;
+                        var linkIndex;
+
+                        linkIndex = this.getAttribute("data-index");
+                        if(linkIndex == -1){
+                            return;
+                        }
+
+                        link = links[linkIndex];
+
+                        location.href = link;
+                    });
                 }
                 else{ //MUNICIPIO_BRASIL                    
                     objEstado = obj2;
@@ -174,6 +190,20 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                         percent = valor / max * scale;
 
                         xtrTooltip.addTrigger(gMunicipio,paramTooltip(rotulo,titulo,serieTitulo,valor,unidade));
+                        gMunicipio.setAttribute("data-index",rotuloIndex);
+                        gMunicipio.addEventListener("click",function(){
+                            var link;
+                            var linkIndex;
+
+                            linkIndex = this.getAttribute("data-index");
+                            if(linkIndex == -1){
+                                return;
+                            }
+
+                            link = links[linkIndex];
+
+                            location.href = link;
+                        });
                         for(index = 0; objMunicipio.coordenadas.length > index; index++){
                             coordenadas = objMunicipio.coordenadas[index];
                             pathMunicipio = {
@@ -239,13 +269,26 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                         pathMunicipio = {
                             tag: objMunicipio.tag,
                             "class": " municipio geoChartHighlight",
-
                             parent: gMunicipio,
                             fill: "rgba("+red+","+green+","+blue+","+percent+")"
                         };
                         pathMunicipio[objMunicipio.attr] = caminho;
                         pathMunicipio = xtrSVG.append(pathMunicipio);
-                        xtrTooltip.addTrigger(gMunicipio,paramTooltip(rotulo,titulo,serieTitulo,valor,unidade));
+                        xtrTooltip.addTrigger(gMunicipio,paramTooltip(rotulo,titulo,serieTitulo,valor,unidade)); 
+                        gMunicipio.setAttribute("data-index",rotuloIndex);
+                        gMunicipio.addEventListener("click",function(){
+                            var link;
+                            var linkIndex;
+
+                            linkIndex = this.getAttribute("data-index");
+                            if(linkIndex == -1){
+                                return;
+                            }
+
+                            link = links[linkIndex];
+
+                            location.href = link;
+                        });                       
                     }
                 }
             }
@@ -279,7 +322,7 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
 
     var restWidth = svgBounding.width - boundingScale.width;
     var restHeight = svgBounding.height - boundingScale.height;
-    
+
     factorX = Math.floor(BBoxScale.x) * (-1);
     factorX = factorX + restWidth * unitPerPxWidth / 2;
 
@@ -438,9 +481,11 @@ function geoHighlight(id){
     var style;
     
     seletor = "g.geoChartHighlight:hover path,path.geoChartHighlight:hover";
-
-    style = document.createElement("style");
-    style.setAttribute("id",id+"_style");
+    style = document.getElementById(id+"_style");
+    if(style == null){
+        style = document.createElement("style");
+        style.setAttribute("id",id+"_style");
+    }
     style.innerHTML = seletor+"{"
         +"fill: "+xtrGrafico.Default.hover.stroke+";"      
         +"stroke: "+xtrGrafico.Default.hover.fill+";"   

@@ -42,7 +42,7 @@
 		}
 		this.getCreate=function(){
 			return {
-				title: "Production(Quantity)",
+				title: "",
 				titlePos: "bottom",
 				titleGap: 25,
 				titleFont: "normal 15pt "+xtrGrafico.Default.font
@@ -551,8 +551,10 @@
 					}
 					if(event.type == "onclick"){
 						linkIndex = event.index;
-						link = links[linkIndex];
-						location.href = link;
+						if(XtrGraficoUtil.isarray(links) ? links.length : false){
+							link = links[linkIndex];
+							location.href = link;
+						}
 					}
 				}
 			}
