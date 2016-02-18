@@ -131,7 +131,7 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                     };
                     pathEstado[objEstado.attr] = objEstado.coordenadas;
                     pathEstado = xtrSVG.append(pathEstado);
-
+                    valor = valor.toFixed(3);
                     xtrTooltip.addTrigger(pathEstado,paramTooltip(rotulo,titulo,serieTitulo,valor,unidade));
                 }
                 else{ //MUNICIPIO_BRASIL                    
@@ -252,12 +252,16 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
         }
     }
 
-    boundingScale = gScale.getBBox();
+    var BBoxScale = gScale.getBBox();
+    boundingScale = gScale.getBoundingClientRect();
 
-    aspectRatio = boundingScale.width / boundingScale.height;
+    var unitPerPxWidth = BBoxScale.width / boundingScale.width; // SVGunit per px
+    var unitPerPxHeight = BBoxScale.height / boundingScale.height; // SVGunit per px
 
-    refX =   grafico.offsetWidth  * 0.9 * aspectRatio / boundingScale.width;
-    refY = - grafico.offsetHeight * 0.9 / aspectRatio / boundingScale.height;
+    aspectRatio = BBoxScale.width / BBoxScale.height;
+
+    refX =   grafico.offsetWidth  * 0.9 * aspectRatio / BBoxScale.width;
+    refY = - grafico.offsetHeight * 0.9 / aspectRatio / BBoxScale.height;
 
     if(grafico.offsetHeight > grafico.offsetWidth){
         refY = -refX
@@ -268,27 +272,17 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
 
     gScale.setAttrs({
         "transform": "matrix("+refX+" 0 0 "+refY+" 0 0"+")"
-    });
+    });    
     
-    factorX = Math.floor(boundingScale.x) * (-1);
-    factorY = Math.floor(boundingScale.y + boundingScale.height) * (-1);
+    factorX = Math.floor(BBoxScale.x) * (-1);
+    factorX = factorX + xtrSVG._.getBoundingClientRect().width * unitPerPxWidth;
+
+    factorY = Math.floor(BBoxScale.y + BBoxScale.height) * (-1);
+    factorY = factorY - xtrSVG._.getBoundingClientRect().height * unitPerPxHeight;
 
     gTranslate.setAttrs({
         "transform": "translate("+ factorX +"," + factorY +")"
     });
-    /*
-    0.055 ----- 3250
-    0.055 ----- 3150
-
-    0.050 ----- 2950
-    0.050 ----- 2800
-
-    0.045 ----- 2650
-    0.045 ----- 2500
-
-    0.040 ----- 2350
-    0.040 ----- 2200
-    */ 
 }
 
 function getObject(array,property,value){
@@ -401,7 +395,10 @@ function geoAreaLegenda(compositeData,red,green,blue,n,percent,scale,style){
 
         var something = first ? "<span> < </span>" : last ? "<span> > </span>" : "";
 
-        label.innerHTML = something+(max*percent).toFixed(0);
+        var valor = max*percent;
+        valor = valor > 1 ? valor.toFixed(0) : valor.toFixed(3);
+
+        label.innerHTML = something+valor;
 
         svg = document.createElementNS(SVGREF,"svg");
         svg.setAttributeNS(null,"width",(size+3));
