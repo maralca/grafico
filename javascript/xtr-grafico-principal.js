@@ -20,6 +20,7 @@
 			var tipo;
 			var tema;
 			var titulos;
+			var tituloPrincipal;
 			var escala;
 			var series;
 			var rotulos;
@@ -87,6 +88,10 @@
 
 			if(XtrGraficoUtil.isset(Input.titulos)){
 				setTitulos(Input.titulos);
+			}
+
+			if(XtrGraficoUtil.isset(Input.titulo)){
+				tituloPrincipal = Input.titulo;
 			}
 
 			if(XtrGraficoUtil.isset(Input.rotulosFormatados)){
@@ -158,6 +163,7 @@
 					me.updateOneSerie = updateOneSerie;
 					me.addAllSeries = addAllSeries;
 					me.addOneSerie = addOneSerie;
+					me.addTitle = addTitle;
 					me.addAllAxis = addAllAxis;
 					me.addAllPlots = addAllPlots;
 					me.addExtras = addExtras;
@@ -724,6 +730,25 @@
 							digest();
 						}
 				   	}
+				   	function getSeriesTitulo(start,end){
+				   		var serie;
+				   		var serieIndex;
+
+				   		var titulo,titulos;
+
+						start = XtrGraficoUtil.isset(start) ? start : "";
+						end = XtrGraficoUtil.isset(end) ? end : "";
+
+						titulos = "";
+
+				   		for(serieIndex = 0; series.ideal.length > serieIndex; serieIndex++){
+				   			serie = series.ideal[serieIndex];
+				   			titulo = serie.nome;
+				   			titulos += start+titulo+end;
+				   		}
+
+				   		return titulos;
+				   	}
 				/////////////////
 				//TIPO DE DADO //
 				/////////////////
@@ -757,22 +782,45 @@
 					return legenda;
 				}
 				function create(id,maintain){
+					var container;
 
 					chartId = id;
 
-					if(!maintain)
-						document.getElementById(chartId).innerHTML = "";
+					if(!maintain){
+						chart = document.getElementById(chartId).innerHTML = "";
+						container = chart.parentNode;
+					}
 
 					chart = Registry.byId(chartId);
 
 					if(XtrGraficoUtil.isset(chart))
 						chart.destroyRecursive(true);
-					chart = new Chart(id);
+
+					chart = new Chart(chartId);
 					chart.setTheme(eval(tema));
 
 					digest();
 
 					return chart;
+				}
+				function addTitle(){
+					chartId = XtrGraficoUtil.isset(chartId) ? chartId : xtrGrafico.ID_GRAFICO;
+
+					var titulo = document.getElementById(chartId+"_titulo");
+
+					console.log(chartId);
+
+					if(titulo == null){
+						titulo = document.createElement("div");
+						titulo.setAttribute("class","xtrGraficoTitulo");
+						titulo.setAttribute("id",chartId+"_titulo");
+						document.getElementById(chartId).parentNode.insertBefore(titulo,
+							document.getElementById(chartId));						
+					}
+					titulo.innerHTML = "";
+					
+					titulo.innerHTML +="<div class='linha'>"+tituloPrincipal.toUpperCase()+ "</div>";
+					titulo.innerHTML +="<div class='linha subTitulo'>" + getSeriesTitulo("<span>","</span>") + "</div>";
 				}
 				function updateOneSerie(one){
 					var serie;

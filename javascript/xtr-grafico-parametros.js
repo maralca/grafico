@@ -40,13 +40,20 @@
 		this.setPlotName=function(name){
 			plotName = name;
 		}
-		this.getCreate=function(){
-			return {
-				title: "",
-				titlePos: "bottom",
-				titleGap: 25,
-				titleFont: "normal 15pt "+xtrGrafico.Default.font
-			}
+		this.getCreate=function(id,title){
+			var create;
+
+			create = {
+				"id": id,
+				"args": {
+					title: XtrGraficoUtil.isset(title) ? title : "",
+					titlePos: "top",
+					titleGap: 50,
+					titleFont: "bold 12pt "+xtrGrafico.Default.font
+				}
+			};
+
+			return create;
 		}
 		this.getPlot=function(){
 

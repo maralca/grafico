@@ -375,7 +375,10 @@
 			script();
 		}
 		else{
+
 			localChart.create(xtrGrafico.ID_GRAFICO);
+
+			localChart.addTitle();
 			
 			localChart.addAllSeries();
 			
