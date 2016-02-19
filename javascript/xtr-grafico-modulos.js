@@ -491,7 +491,7 @@
 						'geografica/regioes/*',
 						'geografica/regioes/brasil',
 
-						'geografica/estados',
+						'geografica/estados/regioes/*',
 						'geografica/estados/brasil'
 
 					],
@@ -1030,7 +1030,7 @@
 				if(value.variacao.indexOf("icognito") >= 0){
 					for(variacaoIndex = 0; value.variacao.length > variacaoIndex; variacaoIndex++){
 						if(value.variacao[variacaoIndex].indexOf("*") >= 0){
-							hasInVariacao = hasInVariacao || value.variacao[variacaoIndex].replace("*","").indexOf(needle) >= 0;
+							hasInVariacao = hasInVariacao || needle.indexOf(value.variacao[variacaoIndex].replace("*","")) >= 0;
 							if(hasInVariacao){
 								break;
 							}
