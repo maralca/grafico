@@ -473,45 +473,27 @@
 					},
 					categoria: ['geografica','mapa','singular'],
 					variacao:[
-						'geo',
-						'geografica',
-						'geografica/brasil/mesoregioes',
-						'geografica/brasil/microregioes',
-						'geografica/brasil/regioes',
-						'geografica/brasil_estados',
-						'geografica/brasil_municipios',
-						'geografica/norte',
-						'geografica/nordeste',
-						'geografica/centro-oeste',
-						'geografica/sudeste',
-						'geografica/sul',
-						'geografica/ac',
-						'geografica/al',
-						'geografica/am',
-						'geografica/ap',
-						'geografica/ba',
-						'geografica/ce',
-						'geografica/df',
-						'geografica/es',
-						'geografica/go',
-						'geografica/ma',
-						'geografica/mg',
-						'geografica/ms',
-						'geografica/mt',
-						'geografica/pa',
-						'geografica/pb',
-						'geografica/pe',
-						'geografica/pi',
-						'geografica/pr',
-						'geografica/rj',
-						'geografica/rn',
-						'geografica/ro',
-						'geografica/rr',
-						'geografica/rs',
-						'geografica/sc',
-						'geografica/se',
-						'geografica/sp',
-						'geografica/to'
+						"icognito",
+
+						// MUNICIPIOS,MESSOREGIOES,MICRORREGIOES remetem a mapa com visão de municipios
+						'geografica/municipios/brasil',
+						'geografica/municipios/regioes/*',
+						'geografica/municipios/estados/*',
+
+						'geografica/mesorregioes/brasil',
+						'geografica/mesorregioes/regioes/*',
+						'geografica/mesorregioes/estados/*',
+
+						'geografica/microrregioes/brasil',
+						'geografica/microrregioes/regioes/*',
+						'geografica/microrregioes/estados/*',
+
+						'geografica/regioes/*',
+						'geografica/regioes/brasil',
+
+						'geografica/estados',
+						'geografica/estados/brasil'
+
 					],
 					modulo: '',
 					ativo: false
@@ -527,8 +509,6 @@
 						'none',
 						'void',
 						'null',
-						null,
-						undefined,
 						"undefined"
 					],
 					modulo: '',
@@ -894,6 +874,8 @@
 			var hasInVariavel;
 			var hasInAlias;
 
+			var variacaoIndex;
+
 			Proper = XtrGraficoUtil.isset(proper) ? proper : "widgets";
 			haystack = dojo[Proper];
 
@@ -903,6 +885,16 @@
 				hasInAlias = false;
 
 				hasInVariacao = XtrGraficoUtil.isset(value.variacao) ? value.variacao.indexOf(needle)>=0 : false;
+				if(value.variacao.indexOf("icognito") >= 0){
+					for(variacaoIndex = 0; value.variacao.length > variacaoIndex; variacaoIndex++){
+						if(value.variacao[variacaoIndex].indexOf("*") >= 0){
+							hasInVariacao = hasInVariacao || value.variacao[variacaoIndex].replace("*","").indexOf(needle) >= 0;
+							if(hasInVariacao){
+								break;
+							}
+						}						
+					}
+				}
 				hasInVariavel = XtrGraficoUtil.isset(value.variavel) ? value.variavel == needle : false;
 				hasInAlias = XtrGraficoUtil.isset(value.alias) ? value.alias == needle : false;
 
@@ -924,6 +916,8 @@
 			var hasInVariavel;
 			var hasInAlias;
 
+			var variacaoIndex;
+
 			Proper = XtrGraficoUtil.isset(proper) ? proper : "widgets";
 			haystack = dojo[Proper];
 
@@ -933,6 +927,16 @@
 				hasInAlias = false;
 
 				hasInVariacao = XtrGraficoUtil.isset(value.variacao) ? value.variacao.indexOf(needle)>=0 : false;
+				if(value.variacao.indexOf("icognito") >= 0){
+					for(variacaoIndex = 0; value.variacao.length > variacaoIndex; variacaoIndex++){
+						if(value.variacao[variacaoIndex].indexOf("*") >= 0){
+							hasInVariacao = hasInVariacao || value.variacao[variacaoIndex].replace("*","").indexOf(needle) >= 0;
+							if(hasInVariacao){
+								break;
+							}
+						}						
+					}
+				}
 				hasInVariavel = XtrGraficoUtil.isset(value.variavel) ? value.variavel == needle : false;
 				hasInAlias = XtrGraficoUtil.isset(value.alias) ? value.alias == needle : false;
 
@@ -1012,6 +1016,8 @@
 			var hasInVariavel;
 			var hasInAlias;
 
+			var variacaoIndex;
+
 			Proper = XtrGraficoUtil.isset(proper) ? proper : "widgets";
 			haystack = dojo[Proper];
 
@@ -1019,7 +1025,18 @@
 				hasInVariacao=false;
 				hasInVariavel=false;
 				hasInAlias=false;
+
 				hasInVariacao = XtrGraficoUtil.isset(value.variacao) ? value.variacao.indexOf(needle)>=0 : false;
+				if(value.variacao.indexOf("icognito") >= 0){
+					for(variacaoIndex = 0; value.variacao.length > variacaoIndex; variacaoIndex++){
+						if(value.variacao[variacaoIndex].indexOf("*") >= 0){
+							hasInVariacao = hasInVariacao || value.variacao[variacaoIndex].replace("*","").indexOf(needle) >= 0;
+							if(hasInVariacao){
+								break;
+							}
+						}					
+					}
+				}
 				hasInVariavel = XtrGraficoUtil.isset(value.variavel) ? value.variavel == needle : false;
 				hasInAlias = XtrGraficoUtil.isset(value.alias) ? value.alias == needle : false;
 

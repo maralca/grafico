@@ -19,6 +19,7 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
     var grafico;
     var tab_exibir;
 
+    var tipo;
     var links;
     var rotulos,rotulo;
     var titulo;
@@ -44,6 +45,7 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
 
     info = XTR_MUNICIPIOS_INFO;
 
+    tipo = compositeData.tipo;
     links = compositeData.links;
     rotulos = compositeData.rotulos;
     rotulosFormatados = compositeData.rotulosFormatados;
@@ -172,13 +174,13 @@ function geoAreaGrafico(compositeData,coordenadas,red,green,blue,scale){
                             infoObj = getObject(info,"id","1"+prop3.substr(1));
                         }
                         if(infoObj){
-                            rotuloIndex = rotulos.indexOf(infoObj.name);
+                            rotuloIndex = rotulos.indexOf(infoObj.municipio);
                             if(rotuloIndex >= 0){                     
                                 rotulo = rotulosFormatados[rotuloIndex];
                                 valor = valores[rotuloIndex];
                             }
                             else{
-                                rotulo = infoObj.name + "&nbsp;<span class='sub'>(Não Consta)</span>";
+                                rotulo = infoObj.municipio.capitalize() + "&nbsp;<span class='sub'>(Não Consta)</span>";
                                 valor = "0";
                             }
                         }
