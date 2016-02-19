@@ -462,7 +462,7 @@
 					var areWe;
 					var myObjectType;
 
-					myObjectType = superModule.getDojoObject(tipo,"tipos");
+					myObjectType = superModule.getDojoObject(tipo,"tipos");					
 					objectsTypes = superModule.getDojoObjectByCategory(needle,"tipos");
 
 					areWe = objectsTypes.indexOf(myObjectType) >=0;

@@ -52,9 +52,18 @@
 					sum = XtrGraficoUtil.somatorium(valores);
 					valor = valores[labelIndex];
 					pecentText = (valor/sum*100).toFixed(1);
-					pecentText = "" + (valor/sum*100).toFixed(1) + "%";
+					pecentText = percentText + "<span class='sub'>%</sub>";
 
 					label.innerHTML = rotulo + ",&nbsp;havia&nbsp" + valor + unidadeText + ",&nbsp;"+"equivalente à"+"&nbsp;"+pecentText;					
+				}
+				else if(localChart.isThisMyChartType("geografica")){
+					sum = XtrGraficoUtil.somatorium(valores);
+					var value = parseFloat(label.lastChild.nodeValue);
+					value = value / sum;
+					value = value.toFixed(3);
+					value = value + "<span class='sub'>%</sub>";
+					label.innerHTML = label.innerHTML+unidadeText;
+					// label.innerHTML = label.innerHTML+", equivalente à "+value;
 				}
 				else{
 					label.innerHTML = label.innerHTML+ "&nbsp;"+unidadeText2;
