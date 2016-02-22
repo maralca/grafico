@@ -4,11 +4,11 @@
 
 	will-change: fill,stroke;
 
-	-webkit-transition: fill .2s, stroke .2s;
-	-moz-transition: fill .2s, stroke .2s;
-	-ms-transition: fill .2s, stroke .2s;
-	-o-transition: fill .2s, stroke .2s;
-	transition: fill .2s, stroke .2s;
+	-webkit-transition: fill .1s, stroke .1s;
+	-moz-transition: fill .1s, stroke .1s;
+	-ms-transition: fill .1s, stroke .1s;
+	-o-transition: fill .1s, stroke .1s;
+	transition: fill .1s, stroke .1s;
 }
 .xtrGraficoTitulo{
 	display: -webkit-box;
@@ -61,6 +61,9 @@
 	display: -webkit-flex;
 	display: flex;
 
+	-webkit-flex-direction: column;
+	flex-direction: column;
+
 	-webkit-justify-content: center;
 	justify-content: center;
 
@@ -69,6 +72,8 @@
 	-webkit-flex-basis: 0;
 			flex-basis: 0;
 
+	padding: 0em 0.6em;
+
 	text-align: center;
 }
 .xtrGraficoTitulo > .linha > *:not(:last-child):not(:only-child){	
@@ -76,7 +81,6 @@
 }
 .xtrGraficoTitulo:after{
 	content: " ";
-	margin-top: 0.6em;
 	border-bottom: 1px solid #B9C4DF;
 }
 .xtrGrafico{

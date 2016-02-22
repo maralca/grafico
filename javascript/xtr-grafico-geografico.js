@@ -103,8 +103,6 @@ function geoAreaGrafico(compositeData,kwargs){
     grafico = document.getElementById(xtrGrafico.ID_GRAFICO);
     tab_exibir = document.getElementById("tab_exibir");
 
-    geoHighlight("geoChart");
-
     function getPercent(valor){
         return valor / max;
     }
@@ -116,11 +114,12 @@ function geoAreaGrafico(compositeData,kwargs){
         "height": grafico.offsetHeight,
         "viewBox": "0 0 "+grafico.offsetWidth+" "+grafico.offsetHeight,
         "preserveAspectRatio": "xMinYMin"                  
-    };                   
-    xtrSVG = new XtrSVG(xtrSVG,xtrGrafico.ID_GRAFICO);
+    };           
+    xtrSVG = new XtrSVG(xtrSVG,xtrGrafico.ID_GRAFICO);    
 
     gScale = {
-        "id": "geoChartScale"
+        "id": "geoChartScale",
+        parent: xtrSVG._
     }
     gScale = xtrSVG.append(gScale);     
 
@@ -272,6 +271,7 @@ function geoAreaGrafico(compositeData,kwargs){
                                 + "&nbsp;<span class='sub'>(Não Consta)</span>";
                                 valor = "-";
                                 XtrGraficoUtil.removeClass(gHighlight,"geoChartHighlight");
+                                xtrTooltip.removeTrigger(gHighlight);
                             }
                         }                    
                         else{
@@ -395,6 +395,7 @@ function geoAreaGrafico(compositeData,kwargs){
                             + "&nbsp;<span class='sub'>(Não Consta)</span>";
                             valor = "-";
                             XtrGraficoUtil.removeClass(gHighlight,"geoChartHighlight");
+                            xtrTooltip.removeTrigger(gHighlight);
                         }
                     }                    
                     else{
@@ -467,6 +468,8 @@ function geoAreaGrafico(compositeData,kwargs){
     gTranslate.setAttrs({
         "transform": "translate("+ factorX +"," + factorY +")"
     });
+
+    geoHighlight("geoChart");
 }
 function linkOnClick(target,links,index){
     target.setAttribute("href",links[index]);
@@ -495,6 +498,7 @@ function paramTooltip(Rotulo,TituloIdentificador,Titulo,Valor,Unidade){
         Valor = Valor > 1 ? Valor.toFixed(0) : Valor.toFixed(3);
     }
     catch(e){}
+
     return {
         content: "<p>"+TituloIdentificador+"&nbsp;:&nbsp;"+Rotulo+"</p>"
         +"<p>"+Titulo+"&nbsp;:&nbsp;"+Valor+"<span class='sub'>"+Unidade+"</sub>"+"</p>"
@@ -630,16 +634,33 @@ function geoHighlight(id){
     var seletor;
     var style;
     
-    seletor = ".geoChartHighlight:hover path,.geoChartHighlight:hover";
-    style = document.getElementById(id+"_style");
-    if(style == null){
-        style = document.createElement("style");
-        style.setAttribute("id",id+"_style");
-    }
-    style.innerHTML = seletor+"{"
-        +"fill: "+xtrGrafico.Default.hover.stroke+";"      
-        +"stroke: "+xtrGrafico.Default.hover.fill+";"   
-    +"}";
+    seletor = ".geoChartHighlight:hover";
 
-    document.body.appendChild(style);
+    var elements = document.querySelectorAll(".geoChartHighlight");
+
+    var element;
+    var elementIndex;
+    for(elementIndex = 0; elements.length > elementIndex; elementIndex++){
+        element = elements[elementIndex];
+
+        element.setAttribute("data-defaultFill",element.getAttributeNS(null,"fill"));
+
+        element.addEventListener("mouseover",function(){
+            var fill;
+
+            fill = this.getAttributeNS(null,"fill");           
+
+            fill = XtrGraficoUtil.color.rotate(fill,-5,1);
+
+            this.setAttributeNS(null,"fill",fill);
+        });
+        element.addEventListener("mouseout",function(){
+            var fill;
+
+            fill = this.getAttribute("data-defaultFill");
+
+            this.setAttributeNS(null,"fill",fill);
+        });
+    }
+
 }
