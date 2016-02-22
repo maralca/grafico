@@ -280,7 +280,7 @@
 				axisValue.majorTickStep = 0.25;
 				axisValue.minorTickStep = axisValue.majorTickStep / 5;
 
-				console.log("Escala Justaposição");
+				console.info("Escala Justaposição");
 			}
 			else{
 				axisValue.labelFunc =  function(x,y,z){
@@ -291,6 +291,9 @@
 //					return XtrGraficoUtil.convertKMB(y);		
 
 				}
+
+				console.info("Escala Linear");
+				
 				if(localChart.isThisMyChartType("cartesiano")){
 					axisX.from = eachElement.MIN.x * 0.8;
 					axisX.to = eachElement.MAX.x * 1.2;
@@ -339,8 +342,6 @@
 			if(localChart.areOneOfTheseMyChartType(['coluna','linha','area'])){
 				axisX=XtrGraficoUtil.concat(axisX,axisLabel);
 				axisY=XtrGraficoUtil.concat(axisY,axisValue);
-
-				console.log(axisValue);
 			}
 			else if(localChart.isThisMyChartType('barra')){
 				axisX=XtrGraficoUtil.concat(axisX,axisValue);
