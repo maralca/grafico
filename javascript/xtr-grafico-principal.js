@@ -132,8 +132,6 @@
 					me.isThisMyScaleType = isThisMyScaleType;
 					me.thisSacleTypeExists = thisSacleTypeExists;
 
-					me.getDimensionObject = getDimensionObject;
-
 					me.getTema = getTema;
 					me.getTipo = getTipo;
 					me.getEscala = getEscala;
@@ -171,6 +169,8 @@
 					me.addConnectToPlot = addConnectToPlot;
 					me.addStyle = addStyle;
 					me.render = render;
+
+					me.getDimensionObject = getDimensionObject;
 
 					superModule = new SuperModule(me);
 					superParameter = new SuperParameter(me);
@@ -309,6 +309,7 @@
 							if(dataObj.y.length > 0){
 								max = XtrGraficoUtil.maximum(dataObj.y);
 								min = XtrGraficoUtil.minimum(dataObj.y);
+
 								maxs.y.push(max);
 								mins.y.push(min);
 								indexes = dataIndex;
@@ -353,7 +354,6 @@
 								sums.y[dataIndex] = sums.y[dataIndex] + dataValue;
 
 							};
-
 							max = XtrGraficoUtil.maximum(data);
 							min = XtrGraficoUtil.minimum(data);
 							maxs.y.push(max);
@@ -1006,7 +1006,7 @@
 
 					var fitted;
 
-					var from,to;
+					var de,para;
 					var xchg;
 
 					var fittedSeries = [];
@@ -1016,15 +1016,15 @@
 					for(serieIndex = 0; rawSeries.length > serieIndex && !fitted; serieIndex++){
 						serie = rawSeries[serieIndex];
 						serie = XtrGraficoUtil.clone(serie);
-						for(from in mascara){
-							to = mascara[from];
-							xchg = to;
+						for(de in mascara){
+							para = mascara[de];
+							xchg = para;
 							try{
-								fittedValue = eval("serie."+to);
+								fittedValue = eval("serie."+para);
 							}
 							catch(e){
-								to = to.split(".");
-								serie[to[0]] = {};
+								para = para.split(".");
+								serie[para[0]] = {};
 								fittedValue = eval("serie."+xchg);
 							}
 							if(XtrGraficoUtil.isset(fittedValue)){
@@ -1032,8 +1032,8 @@
 							}
 							else{
 								fitted = false;
-								eval("serie."+xchg+"=serie."+from);
-								delete serie[from];
+								eval("serie."+xchg+"=serie."+de);
+								delete serie[de];
 							}
 						}				
 						fittedSeries.push(serie);
@@ -1659,7 +1659,7 @@
 				var customIndex;
 				var customTooltip;
 
-				roundData(3);
+				//roundData(3);
 
 				reverseData(true);
 				if(superChart.isThisMyChartType("pizza")){

@@ -321,9 +321,13 @@
 					}
 					axisLabel.from =  1 - 1/eachElement.pontos;
 					axisLabel.to = eachElement.pontos + 1/eachElement.pontos;
-				}			
-
-				axisValue.majorTickStep = base10pow(eachElement.delta.y.sin/10);
+				}
+				if(eachElement.delta.y.sin > 1){
+					axisValue.majorTickStep = base10pow(eachElement.delta.y.sin/10);
+				}
+				else{
+					axisValue.majorTickStep = eachElement.delta.y.sin;
+				}
 				axisValue.minorTickStep = axisValue.majorTickStep / 10;
 				
 				console.info("Escala Linear");
@@ -335,6 +339,8 @@
 			if(localChart.areOneOfTheseMyChartType(['coluna','linha','area'])){
 				axisX=XtrGraficoUtil.concat(axisX,axisLabel);
 				axisY=XtrGraficoUtil.concat(axisY,axisValue);
+
+				console.log(axisValue);
 			}
 			else if(localChart.isThisMyChartType('barra')){
 				axisX=XtrGraficoUtil.concat(axisX,axisValue);
