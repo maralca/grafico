@@ -1659,6 +1659,11 @@
 
 				//roundData(3);
 
+				if(series.length == 1){
+					order = xtrGrafico.organize.order.indexOf("asc") >= 0;
+					organizeData(order);
+				}
+
 				reverseData(true);
 				if(superChart.isThisMyChartType("pizza")){
 					fitPieDataInOnePositveSerie();

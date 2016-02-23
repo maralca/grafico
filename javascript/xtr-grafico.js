@@ -178,8 +178,12 @@
 				alert(msg);
 			}
 		},
+		organize:{
+			order: "asc",
+			first: 4
+		},
 		Default:{
-			tema: "harmony",
+			tema: "distinctive",
 			tipo: "lines",
 			titulos:{
 				valores: "Amostras",
@@ -189,7 +193,7 @@
 			hover:{
 				//fill: "rgba(150,50,150,.5)",
 				fill: "rgba(20,20,20,.7)",
-				stroke: "rgba(65,65,65,.9)",
+				stroke: "rgba(65,65,65,.9)"
 			},
 			font: "Ubuntu"
 		}
@@ -198,7 +202,7 @@
 		var x = document.createElement("style");
 		x.id = "heritage_style";
 		x.innerHTML = "#"+id+" *:not(i){"
-			+"font-family:'"+xtrGrafico.Default.font+"';"
+			//+"font-family:'"+xtrGrafico.Default.font+"';"
 		+"}"
 		+"line:first-child + text{"
 			+" font-size: 16px;"
@@ -215,9 +219,6 @@
 			}
 		});
 	}
-	
-
-	
 
 	var map;
 	var legenda;

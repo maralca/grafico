@@ -92,9 +92,12 @@
 	height:525px; 
 	min-height:525px;
 }
-.xtrGrafico path,
-.xtrGrafico g rect{
+.xtrGrafico g rect,
+.xtrGrafico path{
 	cursor: pointer;
+}
+.xtrGrafico .notLink{
+	cursor: default !important;
 }
 .xtrLegenda input[type="checkbox"],
 .xtrGrafico + * input[type="checkbox"]{

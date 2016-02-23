@@ -199,39 +199,47 @@ function geoAreaGrafico(compositeData,kwargs){
                         "id": prop2,
                         "tag": objEstado.tag,
                         "parent": gRegiao,
-                        "data-value":valor,
-                        "data-percent": percent,
                         "class": "estado geoChartHighlight"
                     };
                     pathEstado[objEstado.attr] = objEstado.coordenadas;
                     pathEstado = xtrSVG.append(pathEstado);
 
-                    xtrSVG.setAttrs(pathEstado,{
-                        fill:"rgba("
-                            + (red) + ","
-                            + (green) + ","
-                            + (blue) + ","
-                            + percent
-                        + ")",
-                        stroke: "rgba("
-                            + (red) +","
-                            + (green) +","
-                            + (blue) +","
-                            + (1 - percent)
-                        +")" 
-                    });
-                    
 
-                    linkOnClick(pathEstado,links,rotuloIndex);
-                    xtrTooltip.addTrigger(pathEstado,
-                        paramTooltip(
-                            rotulo,
-                            titulo,
-                            serieTitulo,
-                            formatado,
-                            unidade
-                        )
-                    );
+                    if(rotuloIndex >= 0){
+                        xtrSVG.setAttrs(pathEstado,{
+                            fill:"rgba("
+                                + (red) + ","
+                                + (green) + ","
+                                + (blue) + ","
+                                + percent
+                            + ")",
+                            stroke: "rgba("
+                                + (red) +","
+                                + (green) +","
+                                + (blue) +","
+                                + (1 - percent)
+                            +")" 
+                        });                    
+
+                        linkOnClick(pathEstado,links,rotuloIndex);
+                        xtrTooltip.addTrigger(pathEstado,
+                            paramTooltip(
+                                rotulo,
+                                titulo,
+                                serieTitulo,
+                                formatado,
+                                unidade
+                            )
+                        );
+                    }
+                    else{
+                        XtrGraficoUtil.removeClass(pathEstado,"geoChartHighlight");
+                        XtrGraficoUtil.addClass(pathEstado,"notLink");
+                        xtrSVG.setAttrs(pathEstado,{
+                            fill: "gainsboro",
+                            stroke: "gainsboro" 
+                        });
+                    }
                 }
                 else{ //MUNICIPIO_BRASIL                    
                     objMunicipios = obj2;
@@ -314,7 +322,8 @@ function geoAreaGrafico(compositeData,kwargs){
                                 });
                             }
                             else{
-                                XtrGraficoUtil.removeClass(gHighlight,"geoChartHighlight");                            
+                                XtrGraficoUtil.removeClass(gHighlight,"geoChartHighlight");
+                                XtrGraficoUtil.addClass(gHighlight,"notLink");                           
                                 xtrSVG.setAttrs(gHighlight,{
                                     fill: "gainsboro",
                                     stroke:"gainsboro"
@@ -417,26 +426,25 @@ function geoAreaGrafico(compositeData,kwargs){
                                     + (1 - percent)
                                 +")" 
                             });
+                            linkOnClick(gHighlight,links,rotuloIndex);
+                            xtrTooltip.addTrigger(gHighlight,
+                                paramTooltip(
+                                    rotulo,
+                                    titulo,
+                                    serieTitulo,
+                                    formatado,
+                                    unidade
+                                )
+                            ); 
                         }
                         else{
-                            XtrGraficoUtil.removeClass(gHighlight,"geoChartHighlight");                       
+                            XtrGraficoUtil.removeClass(gHighlight,"geoChartHighlight");
+                            XtrGraficoUtil.addClass(gHighlight,"notLink");                     
                             xtrSVG.setAttrs(gHighlight,{
                                 fill: "gainsboro",
                                 stroke:"gainsboro"
                             });
-                            rotulo = "Não Consta";
-                            formatado = "S/V";
                         }
-                        linkOnClick(gHighlight,links,rotuloIndex);
-                        xtrTooltip.addTrigger(gHighlight,
-                            paramTooltip(
-                                rotulo,
-                                titulo,
-                                serieTitulo,
-                                formatado,
-                                unidade
-                            )
-                        ); 
                     }                    
                     else{
                         console.warn("Grafico Geografico, cidade de id",idMunicipio.substr(1),"não foi encontrada");
@@ -463,11 +471,11 @@ function geoAreaGrafico(compositeData,kwargs){
     refX =   grafico.offsetWidth  * 0.9 / BBoxScale.width;
     refY = - grafico.offsetHeight * 0.9 / BBoxScale.height;
 
-    if(BBoxScale.height < BBoxScale.width){
-        refY = -refX
+    if(refX >= refY){
+        refX = -refY;
     }
     else{
-        refX = -refY;
+        refY= -refX;
     }
 
     gScale.setAttrs({

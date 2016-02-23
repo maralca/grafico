@@ -466,7 +466,7 @@
 			//@see SuperModule\tipos
 			tipos:[
 				{
-					variavel: '',
+					variavel: 'geo',
 					alias: '',
 					traducao: {
 						portuguesBr: "Geografica"
