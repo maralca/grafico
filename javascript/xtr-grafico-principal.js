@@ -141,6 +141,8 @@
 					me.getTitulos = getTitulos;
 					me.getTipoDado = getTipoDado;
 
+					me.input = Input;
+
 					me.setTipo = setTipo;
 					me.setTema = setTema;
 					me.setEscala = setEscala;
@@ -1657,21 +1659,25 @@
 				var customIndex;
 				var customTooltip;
 
-				//roundData(3);
+				//roundData(3)
 
-				if(series.length == 1){
-					order = xtrGrafico.organize.order.indexOf("asc") >= 0;
-					organizeData(order);
+				if(!superChart.input.notOrder){
+					reverseData(true);
+					if(superChart.isThisMyChartType("pizza")){
+						organizeData();
+					}
+					else{
+						organizeLabels();
+					}
 				}
-
-				reverseData(true);
+				else{
+					console.log(rotulos);
+					superChart.input.notOrder = false;
+					console.log(superChart.input);
+				}
 				if(superChart.isThisMyChartType("pizza")){
 					fitPieDataInOnePositveSerie();
 					customs = fitPieDataByAmount(0.008);
-					organizeData();
-				}
-				else{
-					organizeLabels();
 				}
 				if(superChart.isThisMyChartType("radar")){
 					fitDataSeriesAsLabels();

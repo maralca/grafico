@@ -195,14 +195,14 @@
 				fill: "rgba(20,20,20,.7)",
 				stroke: "rgba(65,65,65,.9)"
 			},
-			font: "Ubuntu"
+			font: ""
 		}
 	}
 	function heritage(id){
 		var x = document.createElement("style");
 		x.id = "heritage_style";
 		x.innerHTML = "#"+id+" *:not(i){"
-			//+"font-family:'"+xtrGrafico.Default.font+"';"
+			+"font-family:'"+xtrGrafico.Default.font+"';"
 		+"}"
 		+"line:first-child + text{"
 			+" font-size: 16px;"
