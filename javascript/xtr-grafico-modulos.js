@@ -479,14 +479,11 @@
 						'geografica/municipios/brasil',
 						'geografica/municipios/regioes/*',
 						'geografica/municipios/estados/*',
+						'geografica/municipios/mesorregioes/*',
 
 						'geografica/mesorregioes/brasil',
 						'geografica/mesorregioes/regioes/*',
 						'geografica/mesorregioes/estados/*',
-
-						'geografica/microrregioes/brasil',
-						'geografica/microrregioes/regioes/*',
-						'geografica/microrregioes/estados/*',
 
 						'geografica/regioes/*',
 						'geografica/regioes/brasil',

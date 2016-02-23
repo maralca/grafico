@@ -58,6 +58,8 @@ function geoAreaGrafico(compositeData,kwargs){
     var addGreen;
     var addBlue;
 
+    var isMeso,isMicro,isMuni,isEstado;
+
     info = XTR_MUNICIPIOS_INFO;
 
     tipo = compositeData.tipo;
@@ -75,24 +77,50 @@ function geoAreaGrafico(compositeData,kwargs){
     subIds = [];
     gSubs = {};
 
-    addRed = 0;
-    addGreen = 0;
-    addBlue = 0;
+    propName = tipo.split("/");
 
-    offsetRed = -10;
-    offsetBlue = 0;
-    offsetGreen = 0;
+    console.log(propName);
 
-    propName = tipo.split("/")[1];
-    if(propName.indexOf("muni") >= 0){
+    isMeso = false;
+    isMicro = false;
+    isMuni = false;
+    isEstado = false;
+
+
+    if(propName.indexOf("municipios") >= 0){
         propName = "nome";
+        isMuni = true;
+        if(propName.indexOf("mesorregioes") >= 0){
+            var mesoTarget = tipo.split("/");
+            mesoTarget = mesoTarget.pop();
+
+            mesoTarget = mesoTarget.replace("-","/").replace(/_/g," ");
+
+            var cidadesToShow = [];
+
+            info = info.filter(function(item){
+                var itemMeso;
+
+                itemMeso = item.mesorregiao.toLowerCase();
+
+                if(itemMeso == mesoTarget){
+                    cidadesToShow.push(item.id);
+                    return true;
+                }
+                return false;
+            });
+
+            isMeso = true;
+        }
     }
-    else if(propName.indexOf("micro") >= 0){
-        propName = "microrregiao";
-    }
-    else if(propName.indexOf("meso") >= 0){
+    else if(propName.indexOf("mesorregioes") >= 0){
+
         propName = "mesorregiao";
     }
+    if(propName.indexOf("estados") >= 0){
+        isEstado = true;
+    }
+
 
     max = XtrGraficoUtil.maximum(valores);
     min = XtrGraficoUtil.minimum(valores);
@@ -177,28 +205,21 @@ function geoAreaGrafico(compositeData,kwargs){
                     pathEstado[objEstado.attr] = objEstado.coordenadas;
                     pathEstado = xtrSVG.append(pathEstado);
 
-                    if(valor != "-"){
-                        xtrSVG.setAttrs(pathEstado,{
-                            fill:"rgba("
-                                + (red+addRed) + ","
-                                + (green+addGreen) + ","
-                                + (blue+addBlue) + ","
-                                + percent
-                            + ")",
-                            stroke: "rgba("
-                                + (red+addRed) +","
-                                + (green+addGreen) +","
-                                + (blue+addBlue) +","
-                                + (1 - percent)
-                            +")" 
-                        });
-                    }
-                    else{
-                        xtrSVG.setAttrs(pathEstado,{
-                            fill: "gainsboro",
-                            stroke:"gainsboro"
-                        });
-                    }
+                    xtrSVG.setAttrs(pathEstado,{
+                        fill:"rgba("
+                            + (red) + ","
+                            + (green) + ","
+                            + (blue) + ","
+                            + percent
+                        + ")",
+                        stroke: "rgba("
+                            + (red) +","
+                            + (green) +","
+                            + (blue) +","
+                            + (1 - percent)
+                        +")" 
+                    });
+                    
 
                     linkOnClick(pathEstado,links,rotuloIndex);
                     xtrTooltip.addTrigger(pathEstado,
@@ -230,24 +251,17 @@ function geoAreaGrafico(compositeData,kwargs){
                         if(!infoObj){
                             infoObj = getObject(info,"id","1"+idMunicipio.substr(1));
                         }
-                        if(propName != "nome"){
+                        if(!isMuni){
                             gSubId = infoObj[propName];
-                            console.log(gSubId);
                             gSub = document.getElementById(gSubId);
                             if(gSub == null){
                                 gSub = {
                                     "id": gSubId,
                                     "class": propName+" geoChartHighlight",
-                                    "parent": gEstado,
-                                    "data-red": addRed+offsetRed,
-                                    "data-blue": addBlue+offsetBlue,
-                                    "data-green": addGreen+offsetGreen
+                                    "parent": gEstado
                                 };
                                 gSub = xtrSVG.append(gSub);
                             }
-                            addRed = parseInt(gSub.getAttribute("data-red"));
-                            addBlue = parseInt(gSub.getAttribute("data-blue"));
-                            addGreen = parseInt(gSub.getAttribute("data-green"));
 
                             gMunicipio["parent"] = gSub;
                             gMunicipio["class"] = "municipio";
@@ -270,6 +284,9 @@ function geoAreaGrafico(compositeData,kwargs){
                                 rotulo = rotulo.capitalize();
                                 valor = valores[rotuloIndex];
                                 formatado = formatados[rotuloIndex];
+
+                                percent = getPercent(valor);
+
                                 linkOnClick(gHighlight,links,rotuloIndex);
                                 xtrTooltip.addTrigger(gHighlight,
                                     paramTooltip(
@@ -280,13 +297,28 @@ function geoAreaGrafico(compositeData,kwargs){
                                         unidade
                                     )
                                 );
+                                xtrSVG.setAttrs(gHighlight,{
+                                    fill:"rgba("
+                                        + (red) + ","
+                                        + (green) + ","
+                                        + (blue) + ","
+                                        + percent
+                                    + ")",
+                                    stroke: "rgba("
+                                        + (red) +","
+                                        + (green) +","
+                                        + (blue) +","
+                                        + (1 - percent)
+                                    +")" 
+                                });
                             }
                             else{
-                                rotulo = infoObj[propName].capitalize() 
-                                + "&nbsp;<span class='sub'>(Não Consta)</span>";
-                                valor = "-";
                                 XtrGraficoUtil.removeClass(gHighlight,"geoChartHighlight");
-                                xtrTooltip.removeTrigger(gHighlight);
+                                xtrTooltip.removeTrigger(gHighlight);                                
+                                xtrSVG.setAttrs(gHighlight,{
+                                    fill: "gainsboro",
+                                    stroke:"gainsboro"
+                                });
                             }
                         }                    
                         else{
@@ -295,36 +327,12 @@ function geoAreaGrafico(compositeData,kwargs){
                             valor = 0;
                         }
 
-                        percent = getPercent(valor);
-
                         for(index = 0; objMunicipio.coordenadas.length > index; index++){
                             caminho = objMunicipio.coordenadas[index];
                             pathMunicipio = {
                                 "tag": objMunicipio.tag,
                                 "parent": gMunicipio
                             };
-                            if(valor != "-"){
-                                xtrSVG.setAttrs(gHighlight,{
-                                    fill:"rgba("
-                                        + (red+addRed) + ","
-                                        + (green+addGreen) + ","
-                                        + (blue+addBlue) + ","
-                                        + percent
-                                    + ")",
-                                    stroke: "rgba("
-                                        + (red+addRed) +","
-                                        + (green+addGreen) +","
-                                        + (blue+addBlue) +","
-                                        + (1 - percent)
-                                    +")" 
-                                });
-                            }
-                            else{
-                                xtrSVG.setAttrs(gHighlight,{
-                                    fill: "gainsboro",
-                                    stroke:"gainsboro"
-                                });
-                            }
                             pathMunicipio[objMunicipio.attr] = caminho;
                             pathMunicipio = xtrSVG.append(pathMunicipio);                        
                         }
@@ -348,6 +356,11 @@ function geoAreaGrafico(compositeData,kwargs){
 
                 gEstado = xtrSVG.append(gEstado);
                 for(idMunicipio in objMunicipios){
+                    if(XtrGraficoUtil.isarray(cidadesToShow)){
+                        if(cidadesToShow.indexOf(idMunicipio.substr(1)) < 0){
+                            continue;
+                        }
+                    }
                     objMunicipio = objMunicipios[idMunicipio];
 
                     gMunicipio = {
@@ -365,17 +378,10 @@ function geoAreaGrafico(compositeData,kwargs){
                             gSub = {
                                 "id": gSubId,
                                 "class": propName+" geoChartHighlight",
-                                "parent": gEstado,
-                                "data-red": addRed+offsetRed,
-                                "data-blue": addBlue+offsetBlue,
-                                "data-green": addGreen+offsetGreen
+                                "parent": gEstado
                             };
                             gSub = xtrSVG.append(gSub);
                         }
-                        addRed = parseInt(gSub.getAttribute("data-red"));
-                        addBlue = parseInt(gSub.getAttribute("data-blue"));
-                        addGreen = parseInt(gSub.getAttribute("data-green"));
-
                         gMunicipio["parent"] = gSub;
                         gMunicipio["class"] = "municipio";
                         gMunicipio = xtrSVG.append(gMunicipio);
@@ -397,24 +403,42 @@ function geoAreaGrafico(compositeData,kwargs){
                             valor = valores[rotuloIndex];
                             formatado = formatados[rotuloIndex];
 
-                            linkOnClick(gHighlight,links,rotuloIndex);                            
-                            xtrTooltip.addTrigger(gHighlight,
-                                paramTooltip(
-                                    rotulo,
-                                    titulo,
-                                    serieTitulo,
-                                    valor,
-                                    unidade
-                                )
-                            );
+                            percent = getPercent(valor);
+                                                       
+                            xtrSVG.setAttrs(gHighlight,{
+                                fill:"rgba("
+                                    + red + ","
+                                    + green + ","
+                                    + blue + ","
+                                    + percent
+                                + ")",
+                                stroke: "rgba("
+                                    + red +","
+                                    + green +","
+                                    + blue +","
+                                    + (1 - percent)
+                                +")" 
+                            });
                         }
                         else{
-                            rotulo = infoObj[propName].capitalize() 
-                            + "&nbsp;<span class='sub'>(Não Consta)</span>";
-                            valor = "-";
-                            XtrGraficoUtil.removeClass(gHighlight,"geoChartHighlight");
-                            xtrTooltip.removeTrigger(gHighlight);
+                            XtrGraficoUtil.removeClass(gHighlight,"geoChartHighlight");                       
+                            xtrSVG.setAttrs(gHighlight,{
+                                fill: "gainsboro",
+                                stroke:"gainsboro"
+                            });
+                            rotulo = "Não Consta";
+                            formatado = "S/V";
                         }
+                        linkOnClick(gHighlight,links,rotuloIndex);
+                        xtrTooltip.addTrigger(gHighlight,
+                            paramTooltip(
+                                rotulo,
+                                titulo,
+                                serieTitulo,
+                                formatado,
+                                unidade
+                            )
+                        ); 
                     }                    
                     else{
                         console.warn("Grafico Geografico, cidade de id",idMunicipio.substr(1),"não foi encontrada");
@@ -422,36 +446,12 @@ function geoAreaGrafico(compositeData,kwargs){
                         valor = 0;
                     }
 
-                    percent = getPercent(valor);
-
                     for(index = 0; objMunicipio.coordenadas.length > index; index++){
                         caminho = objMunicipio.coordenadas[index];
                         pathMunicipio = {
                             "tag": objMunicipio.tag,
                             "parent": gMunicipio
                         };
-                        if(valor != "-"){
-                            xtrSVG.setAttrs(gHighlight,{
-                                fill:"rgba("
-                                    + (red+addRed) + ","
-                                    + (green+addGreen) + ","
-                                    + (blue+addBlue) + ","
-                                    + percent
-                                + ")",
-                                stroke: "rgba("
-                                    + (red+addRed) +","
-                                    + (green+addGreen) +","
-                                    + (blue+addBlue) +","
-                                    + (1 - percent)
-                                +")" 
-                            });
-                        }
-                        else{
-                            xtrSVG.setAttrs(gHighlight,{
-                                fill: "gainsboro",
-                                stroke:"gainsboro"
-                            });
-                        }
                         pathMunicipio[objMunicipio.attr] = caminho;
                         pathMunicipio = xtrSVG.append(pathMunicipio);                        
                     }
@@ -509,7 +509,6 @@ function linkOnClick(target,links,index){
 
         linkIndex = this.getAttribute("data-index");
 
-        console.log(linkIndex);
         if(linkIndex == -1){
             return;
         }
@@ -534,6 +533,7 @@ function paramTooltip(Rotulo,TituloIdentificador,Titulo,Valor,Unidade){
     }
 
 }
+
 function geoAreaLegenda(compositeData,kwargs){
     if(XtrGraficoUtil.isobj(kwargs)){
         red = kwargs.color.red;
@@ -701,7 +701,8 @@ function geoAreaLegenda(compositeData,kwargs){
         parent: xtrSVG._,
         tag: "rect",
         width: width-6,
-        y: 5,
+        y: 4,
+        x: 4,
         height: height-6    ,
         fill: "url(#gradfill)",
         stroke: "#909090",
@@ -713,9 +714,9 @@ function geoAreaLegenda(compositeData,kwargs){
     var text = xtrSVG.append({
         parent: xtrSVG._,
         tag: "text",
-        fill: "black",
-        x: "10",
-        y: height-7.5
+        fill: XtrGraficoUtil.color.blend("#ffffff","rgba("+red+","+green+","+blue+","+1+")"),
+        x: 12,
+        y: height-8
     });
     text.style.setProperty("font-size","14px","important");
     text.innerHTML = minFormatado;
@@ -723,20 +724,20 @@ function geoAreaLegenda(compositeData,kwargs){
     text = xtrSVG.append({
         parent: xtrSVG._,
         tag: "text",
-        fill: "white",
-        x: width,
-        y: height-7.5
+        fill: XtrGraficoUtil.color.blend("#ffffff","rgba("+red+","+green+","+blue+","+percentMin+")"),
+        x: width+12,
+        y: height-8
     });
     text.style.setProperty("font-size","14px","important");
     text.innerHTML = maxFormatado;
-    text.setAttributeNS(null,"x",width - text.getBBox().width - 20);
+    text.setAttributeNS(null,"x",width - text.getBBox().width - 12);
 
     text = xtrSVG.append({
         parent: xtrSVG._,
         tag: "text",
         fill: "black",
         x: width/2,
-        y: height + 20
+        y: height + 16
     });
     text.innerHTML = unidade;
 
@@ -819,8 +820,8 @@ function geoHighlight(id){
             fill = this.getAttributeNS(null,"fill");
             stroke = this.getAttributeNS(null,"stroke");
 
-            this.setAttributeNS(null,"fill",XtrGraficoUtil.color.shade(fill,0.3));
-            this.setAttributeNS(null,"stroke",XtrGraficoUtil.color.shade(stroke,0.3));
+            this.setAttributeNS(null,"fill",XtrGraficoUtil.color.rotate(fill,5));
+            this.setAttributeNS(null,"stroke",XtrGraficoUtil.color.rotate(stroke,5));
         });
         element.addEventListener("mouseout",function(){
             var fill,stroke;

@@ -808,8 +808,6 @@
 
 					var titulo = document.getElementById(chartId+"_titulo");
 
-					console.log(chartId);
-
 					if(titulo == null){
 						titulo = document.createElement("div");
 						titulo.setAttribute("class","xtrGraficoTitulo");
