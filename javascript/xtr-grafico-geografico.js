@@ -314,8 +314,7 @@ function geoAreaGrafico(compositeData,kwargs){
                                 });
                             }
                             else{
-                                XtrGraficoUtil.removeClass(gHighlight,"geoChartHighlight");
-                                xtrTooltip.removeTrigger(gHighlight);                                
+                                XtrGraficoUtil.removeClass(gHighlight,"geoChartHighlight");                            
                                 xtrSVG.setAttrs(gHighlight,{
                                     fill: "gainsboro",
                                     stroke:"gainsboro"
@@ -323,9 +322,7 @@ function geoAreaGrafico(compositeData,kwargs){
                             }
                         }                    
                         else{
-                            console.warn("Grafico Geografico, cidade de id",idMunicipio.substr(1),"não foi encontrada");
-                            rotulo = "Não encontrado";
-                            valor = 0;
+                            console.warn("Grafico Geografico, cidade de id",idMunicipio.substr(1),"não foi encontrada");                            
                         }
 
                         for(index = 0; objMunicipio.coordenadas.length > index; index++){
