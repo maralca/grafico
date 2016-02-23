@@ -481,6 +481,10 @@
 						'geografica/municipios/estados/*',
 						'geografica/municipios/mesorregioes/*',
 
+						'geografica/microrregioes/brasil/',
+						'geografica/microrregioes/regioes/*',
+						'geografica/microrregioes/estados/*',
+
 						'geografica/mesorregioes/brasil',
 						'geografica/mesorregioes/regioes/*',
 						'geografica/mesorregioes/estados/*',

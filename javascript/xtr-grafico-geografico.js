@@ -79,17 +79,12 @@ function geoAreaGrafico(compositeData,kwargs){
 
     propName = tipo.split("/");
 
-    console.log(propName);
-
     isMeso = false;
     isMicro = false;
     isMuni = false;
     isEstado = false;
 
-
-    if(propName.indexOf("municipios") >= 0){
-        propName = "nome";
-        isMuni = true;
+    if(propName.indexOf("municipios") >= 0 || propName.indexOf("microrregioes") >= 0){
         if(propName.indexOf("mesorregioes") >= 0){
             var mesoTarget = tipo.split("/");
             mesoTarget = mesoTarget.pop();
@@ -109,9 +104,16 @@ function geoAreaGrafico(compositeData,kwargs){
                 }
                 return false;
             });
-
             isMeso = true;
         }
+        if(propName.indexOf("microrregioes") >= 0){
+            propName = "microrregiao";
+            isMicro = true;
+        }
+        else{
+            propName = "nome";
+        }
+        isMuni = true;
     }
     else if(propName.indexOf("mesorregioes") >= 0){
 
@@ -120,7 +122,6 @@ function geoAreaGrafico(compositeData,kwargs){
     if(propName.indexOf("estados") >= 0){
         isEstado = true;
     }
-
 
     max = XtrGraficoUtil.maximum(valores);
     min = XtrGraficoUtil.minimum(valores);
@@ -462,12 +463,10 @@ function geoAreaGrafico(compositeData,kwargs){
 
     var BBoxScale = gScale.getBBox();
 
-    aspectRatio = BBoxScale.width / BBoxScale.height;
+    refX =   grafico.offsetWidth  * 0.9 / BBoxScale.width;
+    refY = - grafico.offsetHeight * 0.9 / BBoxScale.height;
 
-    refX =   grafico.offsetWidth  * 0.9 * aspectRatio / BBoxScale.width;
-    refY = - grafico.offsetHeight * 0.9 / aspectRatio / BBoxScale.height;
-
-    if(grafico.offsetHeight > grafico.offsetWidth){
+    if(BBoxScale.height < BBoxScale.width){
         refY = -refX
     }
     else{
