@@ -1109,7 +1109,7 @@
 									valor = XtrGraficoUtil.isset(custom.valor) ? custom.valor : valor;
 								}
 								tooltip = "<p>"+titulo+":&nbsp;"+rotulo+"</p>"
-								+'<p>'+nome+':&nbsp;'+formatado+'<span class="sub">'+unidade+'</span></p>';
+								+'<p>'+nome+'<span class="sub">('+unidade+')</span>:&nbsp;'+formatado+'</p>';
 								tooltips.push(tooltip);
 							}
 						}
@@ -1664,16 +1664,14 @@
 				if(!superChart.input.notOrder){
 					reverseData(true);
 					if(superChart.isThisMyChartType("pizza")){
-						organizeData();
+						//organizeData();
 					}
 					else{
-						organizeLabels();
+						//organizeLabels();
 					}
 				}
 				else{
-					console.log(rotulos);
 					superChart.input.notOrder = false;
-					console.log(superChart.input);
 				}
 				if(superChart.isThisMyChartType("pizza")){
 					fitPieDataInOnePositveSerie();
@@ -1695,7 +1693,7 @@
 					fitDataSeriesInPoints();
 				}
 
-				cleansSerieName();
+				//cleansSerieName();
 				generateTooltips(superChart.isThisMyChartType("cartesiano"),customTooltip);
 
 				series = escala.fn(series);	

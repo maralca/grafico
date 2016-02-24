@@ -511,6 +511,8 @@ function linkOnClick(target,links,index){
         var link;
         var linkIndex;
 
+        console.log(this);
+
         linkIndex = this.getAttribute("data-index");
 
         if(linkIndex == -1){
