@@ -123,18 +123,60 @@ function geoAreaGrafico(compositeData,kwargs){
         isEstado = true;
     }
 
+    /*console.info({
+        estado: isEstado,
+        meso: isMeso,
+        micro: isMicro,
+        muni: isMuni,
+        content: info
+    });*/
+    
+    var order,orderClone;
+    order = [];
+    valores.sort(function(a,b){
+        order.push(a-b);
+        return a-b;
+    });
+    orderClone = XtrGraficoUtil.clone(order);
+    formatados.sort(function(){
+        return orderClone.shift();
+    });
+    orderClone = XtrGraficoUtil.clone(order);
+    rotulos.sort(function(){
+        return orderClone.shift();
+    });
+    orderClone = XtrGraficoUtil.clone(order);
+    rotulosFormatados.sort(function(){
+        return orderClone.shift();
+    });   
+    links.sort(function(){
+        return order.shift();
+    });
+    
+    console.log(compositeData);
+    
+    var eachValue  = 1 / valores.length;    
+    var total = 0;
+    
+    function getPercent(valor){
+        var index = valores.indexOf(valor);
+        return index/(valores.length-1);
+    }
+
     max = XtrGraficoUtil.maximum(valores);
     min = XtrGraficoUtil.minimum(valores);
-    sum = XtrGraficoUtil.somatorium(valores)
+    sum = XtrGraficoUtil.somatorium(valores);
 
     xtrTooltip = new XtrTooltip("tooltip_geochart","cima");
+    function addTooltip(x1,x2){
+        if(x1.hasAttribute("tooltip_geochart"))
+            return;
+        x1.setAttribute("tooltip_geochart","true");
+        xtrTooltip.addTrigger(x1,x2);
+    }
 
     grafico = document.getElementById(xtrGrafico.ID_GRAFICO);
     tab_exibir = document.getElementById("tab_exibir");
-
-    function getPercent(valor){
-        return valor / max;
-    }
     
     xtrSVG = {
         "id": "geoChart",
@@ -222,7 +264,7 @@ function geoAreaGrafico(compositeData,kwargs){
                         });                    
 
                         linkOnClick(pathEstado,links,rotuloIndex);
-                        xtrTooltip.addTrigger(pathEstado,
+                        addTooltip(pathEstado,
                             paramTooltip(
                                 rotulo,
                                 titulo,
@@ -297,7 +339,7 @@ function geoAreaGrafico(compositeData,kwargs){
                                 percent = getPercent(valor);
 
                                 linkOnClick(gHighlight,links,rotuloIndex);
-                                xtrTooltip.addTrigger(gHighlight,
+                                addTooltip(gHighlight,
                                     paramTooltip(
                                         rotulo,
                                         titulo,
@@ -427,7 +469,7 @@ function geoAreaGrafico(compositeData,kwargs){
                                 +")" 
                             });
                             linkOnClick(gHighlight,links,rotuloIndex);
-                            xtrTooltip.addTrigger(gHighlight,
+                            addTooltip(gHighlight,
                                 paramTooltip(
                                     rotulo,
                                     titulo,
@@ -471,7 +513,7 @@ function geoAreaGrafico(compositeData,kwargs){
     refX =   grafico.offsetWidth  * 0.9 / BBoxScale.width;
     refY = - grafico.offsetHeight * 0.9 / BBoxScale.height;
 
-    if(refX >= refY){
+    if(refX >= refY && !isMicro){
         refX = -refY;
     }
     else{
@@ -506,21 +548,22 @@ function geoAreaGrafico(compositeData,kwargs){
 }
 function linkOnClick(target,links,index){
     target.setAttribute("href",links[index]);
+    if(target.hasAttribute("data-index"))
+        return;
     target.setAttribute("data-index",index);                    
-    target.addEventListener("click",function(){
+    target.addEventListener("click",function(event){
         var link;
         var linkIndex;
-
-        console.log(this);
+        event.stopPropagation();
+        event.preventDefault();
 
         linkIndex = this.getAttribute("data-index");
-
+        
         if(linkIndex == -1){
             return;
         }
-
         link = links[linkIndex];
-
+        alert(link);
         location.href = link;
     }); 
 }
@@ -661,7 +704,7 @@ function geoAreaLegenda(compositeData,kwargs){
         offset: "0%",
         "style": {
             "stop-color": "rgb("+red+","+green+","+blue+")",
-            "stop-opacity": percentMin
+            "stop-opacity": 0.1
         }
     });
     xtrSVG.append({
@@ -670,7 +713,7 @@ function geoAreaLegenda(compositeData,kwargs){
         offset: "100%",
         "style": {
             "stop-color": "rgb("+red+","+green+","+blue+")",
-            "stop-opacity": percentMax
+            "stop-opacity": 0.9
         }
     });
 
@@ -715,14 +758,14 @@ function geoAreaLegenda(compositeData,kwargs){
         "stroke-width": 2,
         rx: 15,
         ry: 15
-    });
-
+    });    
+    
     var text = xtrSVG.append({
         parent: xtrSVG._,
         tag: "text",
-        fill: XtrGraficoUtil.color.blend("#ffffff","rgba("+red+","+green+","+blue+","+1+")"),
+        fill: XtrGraficoUtil.color.blend("#ffffff","rgba("+red+","+green+","+blue+","+(0.9)+")"),
         x: 12,
-        y: height-8
+        y: height-10
     });
     text.style.setProperty("font-size","14px","important");
     text.innerHTML = minFormatado;
@@ -730,9 +773,9 @@ function geoAreaLegenda(compositeData,kwargs){
     text = xtrSVG.append({
         parent: xtrSVG._,
         tag: "text",
-        fill: XtrGraficoUtil.color.blend("#ffffff","rgba("+red+","+green+","+blue+","+percentMin+")"),
+        fill: XtrGraficoUtil.color.blend("#ffffff","rgba("+red+","+green+","+blue+","+(0.1)+")"),
         x: width+12,
-        y: height-8
+        y: height-10
     });
     text.style.setProperty("font-size","14px","important");
     text.innerHTML = maxFormatado;
@@ -819,7 +862,7 @@ function geoHighlight(id){
 
         element.setAttributeNS(null,"data-defaultFill",element.getAttributeNS(null,"fill"));
         element.setAttributeNS(null,"data-defaultStroke",element.getAttributeNS(null,"stroke"));
-
+        
         element.addEventListener("mouseover",function(){
             var fill,stroke;
 

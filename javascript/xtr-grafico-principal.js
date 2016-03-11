@@ -1251,6 +1251,11 @@
 
 					serie = series[0];
 					valores = serie.valores;
+					
+					if(valores.length < 5){
+						return;
+					}
+					
 					valoresRef = XtrGraficoUtil.clone(valores);
 					formatados = serie.formatados;
 

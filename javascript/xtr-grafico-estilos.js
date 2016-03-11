@@ -20,7 +20,7 @@
 			var valores,valor;
 			var sum;
 			var unidade;
-			var pecentText;
+			var percentText;
 
 			series = localChart.getSeries().ideal;
 			serie = series[0];
@@ -51,10 +51,10 @@
 				if(localChart.isThisMyChartType("pizza")){
 					sum = XtrGraficoUtil.somatorium(valores);
 					valor = valores[labelIndex];
-					pecentText = (valor/sum*100).toFixed(1);
-					pecentText = percentText + "<span class='sub'>%</sub>";
+					percentText = (valor/sum*100).toFixed(1);
+					percentText = percentText + "<span class='sub'>%</sub>";
 
-					label.innerHTML = rotulo + ",&nbsp;havia&nbsp" + valor + unidadeText + ",&nbsp;"+"equivalente à"+"&nbsp;"+pecentText;					
+					label.innerHTML = rotulo + ",&nbsp;" + valor + unidadeText + "&nbsp;"+"equivalente à"+"&nbsp;"+percentText;					
 				}
 				else if(localChart.isThisMyChartType("geografica")){
 					sum = XtrGraficoUtil.somatorium(valores);
