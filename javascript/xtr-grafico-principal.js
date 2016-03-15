@@ -1267,8 +1267,9 @@
 					goOn = minAmountPercent > currentPercent;		
 
 					if(!XtrGraficoUtil.isset(maxSlicesName)){
-						maxSlicesName = "Outros - Com menos de "+(minAmountPercent*100)+"%"
-						+' equivalente à '+(minAmountPercent*sum).toFixed(0)+'<span class="sub">'+serie.unidade+'</span>';
+						maxSlicesName = "Outros - Com menos de "
+						+(minAmountPercent*sum).toFixed(0)+'<span class="sub">'+serie.unidade+'</span>'
+						+' equivalente à '+(minAmountPercent*100)+"%";
 					}
 
 					sumMin = 0;
