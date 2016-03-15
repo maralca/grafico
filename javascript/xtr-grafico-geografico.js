@@ -133,39 +133,17 @@ function geoAreaGrafico(compositeData,kwargs){
     
     var order,orderClone;
     order = [];
-    valores.sort(function(a,b){
-        order.push(a-b);
-        return a-b;
-    });
-    orderClone = XtrGraficoUtil.clone(order);
-    formatados.sort(function(){
-        return orderClone.shift();
-    });
-    orderClone = XtrGraficoUtil.clone(order);
-    rotulos.sort(function(){
-        return orderClone.shift();
-    });
-    orderClone = XtrGraficoUtil.clone(order);
-    rotulosFormatados.sort(function(){
-        return orderClone.shift();
-    });   
-    links.sort(function(){
-        return order.shift();
-    });
-    
-    console.log(compositeData);
     
     var eachValue  = 1 / valores.length;    
     var total = 0;
-    
-    function getPercent(valor){
-        var index = valores.indexOf(valor);
-        return index/(valores.length-1);
-    }
 
     max = XtrGraficoUtil.maximum(valores);
     min = XtrGraficoUtil.minimum(valores);
     sum = XtrGraficoUtil.somatorium(valores);
+    
+    function getPercent(valor){
+        return valor/max;
+    }
 
     xtrTooltip = new XtrTooltip("tooltip_geochart","cima");
     function addTooltip(x1,x2){
@@ -373,7 +351,7 @@ function geoAreaGrafico(compositeData,kwargs){
                             }
                         }                    
                         else{
-                            console.warn("Grafico Geografico, cidade de id",idMunicipio.substr(1),"não foi encontrada");                            
+                            console.warn("Grafico Geografico, cidade de id",idMunicipio.substr(1),"nÃƒÂ£o foi encontrada");                            
                         }
 
                         for(index = 0; objMunicipio.coordenadas.length > index; index++){
@@ -489,8 +467,8 @@ function geoAreaGrafico(compositeData,kwargs){
                         }
                     }                    
                     else{
-                        console.warn("Grafico Geografico, cidade de id",idMunicipio.substr(1),"não foi encontrada");
-                        rotulo = "Não encontrado";
+                        console.warn("Grafico Geografico, cidade de id",idMunicipio.substr(1),"nÃƒÂ£o foi encontrada");
+                        rotulo = "NÃƒÂ£o encontrado";
                         valor = 0;
                     }
 

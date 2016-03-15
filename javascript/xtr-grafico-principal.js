@@ -1252,7 +1252,7 @@
 					serie = series[0];
 					valores = serie.valores;
 					
-					if(valores.length < 5){
+					if(valores.length < 8){
 						return;
 					}
 					
@@ -1267,8 +1267,8 @@
 					goOn = minAmountPercent > currentPercent;		
 
 					if(!XtrGraficoUtil.isset(maxSlicesName)){
-						maxSlicesName = "Com menos de "+(minAmountPercent*100)+"%"
-						+' equivalente à '+(minAmountPercent*sum).toFixed(0)+'<span class="sub">('+serie.unidade+')</span>';
+						maxSlicesName = "Outros - Com menos de "+(minAmountPercent*100)+"%"
+						+' equivalente à '+(minAmountPercent*sum).toFixed(0)+'<span class="sub">'+serie.unidade+'</span>';
 					}
 
 					sumMin = 0;

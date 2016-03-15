@@ -54,7 +54,7 @@
 					percentText = (valor/sum*100).toFixed(1);
 					percentText = percentText + "<span class='sub'>%</sub>";
 
-					label.innerHTML = rotulo + ",&nbsp;" + valor + unidadeText + "&nbsp;"+"equivalente à"+"&nbsp;"+percentText;					
+					label.innerHTML = rotulo + ",&nbsp;" + valor + unidadeText + ",&nbsp;"+"equivalente à"+"&nbsp;"+percentText;					
 				}
 				else if(localChart.isThisMyChartType("geografica")){
 					sum = XtrGraficoUtil.somatorium(valores);
