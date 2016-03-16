@@ -18,14 +18,49 @@
 			var rotulos;
 
 			var valores,valor;
+			var formatados,formatado;
 			var sum;
 			var unidade;
 			var percentText;
+			
+			function getText(kwargs){
+				var rotulo = kwargs.rotulo || "";
+				var valor = kwargs.valor || -1;
+				var sum = kwargs.sum || valor;
+				var formatado = kwargs.formatado || valor;
+				var percentual = kwargs.percentual || -1;
+				var unidade = kwargs.unidade || "";
+				
+				var text = rotulo + getValue() + getPercentual() + ";";
+				
+				return text;
+				
+				function getValue(){
+					if(valor == -1)
+						return getUnity();
+					return ", " + formatado+getUnity();
+				}
+				
+				function getUnity(){
+					if(unidade == "")
+						return "";
+					return "<span class='sub'>" + unidade + "</span>";				
+				}
+				function getPercentual(){
+					if(percentual == -1){
+						return "";
+					}
+					var percentText = (valor/sum*100).toFixed(percentual);
+					percentText = percentText + "<span class='sub'>%</sub>";
+					percentText = ", igual a " + percentText;
+					return percentText
+				}
+			}
 
 			series = localChart.getSeries().ideal;
 			serie = series[0];
-
 			valores = serie.valores;
+			formatados = serie.formatados;
 			unidade = serie.unidade;
 
 			if(XtrGraficoUtil.isarray(unidade)){
@@ -46,27 +81,35 @@
 				}
 
 				newLabel = label.parentNode.querySelector(".xtrCheckboxLabelText");
-				var unidadeText = "<span class='sub'>" + unidade + "</span>";
-				var unidadeText2 = "<span class='sub'>(" + unidade + ")</span>";
 				if(localChart.isThisMyChartType("pizza")){
 					sum = XtrGraficoUtil.somatorium(valores);
 					valor = valores[labelIndex];
-					percentText = (valor/sum*100).toFixed(1);
-					percentText = percentText + "<span class='sub'>%</sub>";
-
-					label.innerHTML = rotulo + ",&nbsp;" + valor + unidadeText + ",&nbsp;"+"equivalente à"+"&nbsp;"+percentText;					
+					formatado = formatados[labelIndex];
+					label.innerHTML = getText({
+						"rotulo": rotulo,
+						"valor": valor,
+						"sum": sum,
+						"formatado": formatado,
+						"percentual": 1,
+						"unidade": unidade
+					});			
 				}
 				else if(localChart.isThisMyChartType("geografica")){
 					sum = XtrGraficoUtil.somatorium(valores);
 					var value = parseFloat(label.lastChild.nodeValue);
 					value = value / sum;
-					value = value.toFixed(3);
-					value = value + "<span class='sub'>%</sub>";
-					label.innerHTML = label.innerHTML+unidadeText;
-					// label.innerHTML = label.innerHTML+", equivalente à "+value;
+					label.innerHTML = getText({
+						"rotulo": label.innerHTML,
+						"valor": value,
+						"percentual": 3,
+						"unidade": unidade
+					});
 				}
 				else{
-					label.innerHTML = label.innerHTML+ "&nbsp;"+unidadeText2;
+					label.innerHTML = label.innerHTML = getText({
+						"rotulo": label.innerHTML,
+						"unidade": '('+unidade+')'
+					});
 				}
 				newLabel.innerHTML = label.innerHTML;
 

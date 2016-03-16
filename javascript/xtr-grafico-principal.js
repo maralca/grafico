@@ -805,14 +805,15 @@
 
 					return chart;
 				}
-				function addTitle(){
+				function addTitle(inBlock){
 					chartId = XtrGraficoUtil.isset(chartId) ? chartId : xtrGrafico.ID_GRAFICO;
 
 					var titulo = document.getElementById(chartId+"_titulo");
+					var classSubTitulo = inBlock ? "inBlock" : "inLine";
 
 					if(titulo == null){
 						titulo = document.createElement("div");
-						titulo.setAttribute("class","xtrGraficoTitulo");
+						titulo.setAttribute("class","xtrGraficoTitulo "+classSubTitulo);
 						titulo.setAttribute("id",chartId+"_titulo");
 						document.getElementById(chartId).parentNode.insertBefore(titulo,
 							document.getElementById(chartId));						
@@ -820,6 +821,7 @@
 					titulo.innerHTML = "";
 					
 					titulo.innerHTML +="<div class='linha'>"+tituloPrincipal.toUpperCase()+ "</div>";
+
 					titulo.innerHTML +="<div class='linha subTitulo'>" + getSeriesTitulo("<span>","</span>") + "</div>";
 				}
 				function updateOneSerie(one){
