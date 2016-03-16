@@ -51,8 +51,8 @@
 						return "";
 					}
 					var percentText = (valor/sum*100).toFixed(percentual);
-					percentText = percentText + "<span class='sub'>%</sub>";
-					percentText = ", igual a " + percentText;
+					percentText = percentText + "<span class='sub'>%</span>";
+					percentText = "&nbsp;"+"(" + percentText + ")";
 					return percentText
 				}
 			}

@@ -377,6 +377,8 @@
 		}
 		else{
 
+			beforeStart(objAux);
+
 			localChart.create(xtrGrafico.ID_GRAFICO);
 
 			localChart.addTitle();
@@ -399,7 +401,77 @@
 		}
 	}
 
+    function escalonador_real(where){
+        var localChart;
+        var enable;
+        var alert;
+        var color;
+
+        localChart = new SuperChart(compositeDataHandler.current());
+
+        enable = !localChart.areOneOfTheseMyChartType(['empilhadas']);
+
+        if(enable){
+	        alert = "verde";
+	        color = "";
+
+	        checkboxObj = {
+	            id: "xtrCheckbox_escalonador",
+	            checked: localChart.isThisMyScaleType("justa"),
+	            disabled: enable,
+	            text:{
+	                color: color                       
+	            },
+	            content: "Justaposição(%)",
+	            type: "verde",
+	            "class": "xtr alert "+alert,
+	            addEventListener: {
+	                where: "input",
+	                type: "change",
+	                func: function(x,type,objAux){
+	                    var labelText;
+	                    var label;
+	                    var input;
+	                    var compositeData;
+
+	                    labelText = objAux.labelText;
+	                    label = objAux.label;
+	                    input = objAux.input;
+	                    compositeData = compositeDataHandler.current();
+
+	                    if(input.checked)
+	                        compositeData.escala = "justa";
+	                    else
+	                        compositeData.escala = "linear";
+
+	                    compositeDataHandler.override(compositeData);
+
+	                    changeChart(compositeData);
+
+	                    elements = document.getElementById(xtrGrafico.ID_LEGENDA).querySelectorAll(".xtrCheckboxElement[data-legenda]");
+	                    var element;
+	                    var elementIndex;
+	                    for(elementIndex = 0; elements.length > elementIndex; elementIndex++){
+	                        element = elements[elementIndex];
+	                        element.setAttribute("checked",!element.getAttribute("checked"));
+	                        element.firstChild.setAttribute("checked",!element.getAttribute("checked"));
+	                    }               
+	                }
+	            }
+	        } 
+	        div = document.createElement("div");
+	        div.className += " flexbox"
+	        xtrCheckbox = XtrCheckbox(checkboxObj).node;
+	        var hr = document.createElement("hr");
+	        where.appendChild(hr);
+	        div.appendChild(xtrCheckbox);
+	        where.appendChild(div);
+	    }
+    }  
+
 	function generate(compositeData,objParam){
+		window.escalonador = escalonador_real;
+
 		objAux = {
 			grafico:xtrGrafico.ID_GRAFICO,
 			legenda:xtrGrafico.ID_LEGENDA

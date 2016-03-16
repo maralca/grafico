@@ -271,7 +271,7 @@
 				axisValue.majorTickStep = 1;	
 				axisValue.minorTickStep = axisValue.majorTickStep / 5;
 
-				console.info("Escala Logaritimica");
+				//console.info("Escala Logaritimica");
 			}
 			else if(localChart.isThisMyScaleType('justa')){
 				axisValue.labelFunc = function(x,y,z){
@@ -280,7 +280,7 @@
 				axisValue.majorTickStep = 0.25;
 				axisValue.minorTickStep = axisValue.majorTickStep / 5;
 
-				console.info("Escala Justaposição");
+				//console.info("Escala Justaposição");
 			}
 			else{
 				axisValue.labelFunc =  function(x,y,z){
@@ -292,7 +292,7 @@
 
 				}
 
-				console.info("Escala Linear");
+				//console.info("Escala Linear");
 				
 				if(localChart.isThisMyChartType("cartesiano")){
 					axisX.from = eachElement.MIN.x * 0.8;
