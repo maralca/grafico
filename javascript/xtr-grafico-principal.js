@@ -1074,7 +1074,7 @@
 
 					var dims,dim;
 
-					isCartesian = superChart.isThisMyChartType("cartesiano");
+					isCartesian = superChart.isThisMyChartType("cartesiano");					
 
 					dims = ['x','y','raio'];
 					titulo = titulos.identificadores;
@@ -1091,6 +1091,7 @@
 							valor = valores[valorIndex];
 							formatado = formatados[valorIndex];
 							rotulo = rotulos[valorIndex];
+							rotulo = XtrGraficoUtil.remover(rotulo,"{{","}}");
 							unidade = serie.unidade;
 
 							if(isCartesian){
@@ -1110,8 +1111,13 @@
 									nome = XtrGraficoUtil.isset(custom.nome) ? custom.nome : nome;
 									valor = XtrGraficoUtil.isset(custom.valor) ? custom.valor : valor;
 								}
-								tooltip = "<p>"+titulo+":&nbsp;"+rotulo+"</p>"
-								+'<p>'+nome+'<span class="sub">('+unidade+')</span>:&nbsp;'+formatado+'</p>';
+								tooltip = xtrGrafico.getTooltip({
+									titulo: titulo,
+									rotulo: rotulo,
+									nome: nome,
+									valor: formatado,
+									unidade: unidade
+								});
 								tooltips.push(tooltip);
 							}
 						}
@@ -1269,9 +1275,9 @@
 					goOn = minAmountPercent > currentPercent;		
 
 					if(!XtrGraficoUtil.isset(maxSlicesName)){
-						maxSlicesName = "Outros - Com menos de "
+						maxSlicesName = "{{FATIA_OUTROS}}OUTROS - Com menos de "
 						+(minAmountPercent*sum).toFixed(0)+'<span class="sub">'+serie.unidade+'</span>'
-						+' equivalente à '+(minAmountPercent*100)+"%";
+						+'&nbsp;('+(minAmountPercent*100)+'<span class="sub">%</span>)';
 					}
 
 					sumMin = 0;

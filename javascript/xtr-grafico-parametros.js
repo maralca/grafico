@@ -332,8 +332,6 @@
 					axisValue.majorTickStep = eachElement.delta.y.sin;
 				}
 				axisValue.minorTickStep = axisValue.majorTickStep / 10;
-				
-				console.info("Escala Linear");
 			}
 			if(localChart.areOneOfTheseMyChartType(['linha','cartesiano'])){
 				axisValue.includeZero = false;

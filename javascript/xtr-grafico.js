@@ -178,6 +178,18 @@
 				alert(msg);
 			}
 		},
+		getTooltip:function(kwargs){
+			var titulo = kwargs.titulo || "";
+			var rotulo = kwargs.rotulo || "";
+			var serieNome = kwargs.nome || "";
+			var unidade = kwargs.unidade || "";
+			unidade = XtrGraficoUtil.remover(unidade,"[","]");
+			unidade = unidade == "" ? "" : "("+unidade+")";
+			var valor = kwargs.valor;
+			
+			return "<p>"+titulo+":&nbsp;"+rotulo+"</p>"
+			+'<p>'+serieNome+'<span class="sub">'+unidade+'</span>:&nbsp;'+valor+'</p>';
+		},
 		organize:{
 			order: "asc",
 			first: 4
@@ -409,7 +421,7 @@
 
         localChart = new SuperChart(compositeDataHandler.current());
 
-        enable = !localChart.areOneOfTheseMyChartType(['empilhadas']);
+        enable = localChart.areOneOfTheseMyChartType(['empilhadas']);
 
         if(enable){
 	        alert = "verde";
@@ -418,7 +430,6 @@
 	        checkboxObj = {
 	            id: "xtrCheckbox_escalonador",
 	            checked: localChart.isThisMyScaleType("justa"),
-	            disabled: enable,
 	            text:{
 	                color: color                       
 	            },

@@ -30,15 +30,17 @@
 				var formatado = kwargs.formatado || valor;
 				var percentual = kwargs.percentual || -1;
 				var unidade = kwargs.unidade || "";
+				unidade = unidade.replace(/\[|\]/g,"");
+				var separador = kwargs.separador || "";
 				
-				var text = rotulo + getValue() + getPercentual() + ";";
+				var text = rotulo + separador + "<b>" + getValue() + getPercentual() + "</b>" + ";";
 				
 				return text;
 				
 				function getValue(){
 					if(valor == -1)
 						return getUnity();
-					return ", " + formatado+getUnity();
+					return formatado+getUnity();
 				}
 				
 				function getUnity(){
@@ -91,8 +93,9 @@
 						"sum": sum,
 						"formatado": formatado,
 						"percentual": 1,
-						"unidade": unidade
-					});			
+						"unidade": unidade,
+						"separador": rotulo.indexOf("{{FATIA_OUTROS}}") >= 0 ? ", totalizando: " : ": "
+					});
 				}
 				else if(localChart.isThisMyChartType("geografica")){
 					sum = XtrGraficoUtil.somatorium(valores);
@@ -102,7 +105,8 @@
 						"rotulo": label.innerHTML,
 						"valor": value,
 						"percentual": 3,
-						"unidade": unidade
+						"unidade": unidade,
+						"separador": ","
 					});
 				}
 				else{
@@ -111,6 +115,7 @@
 						"unidade": '('+unidade+')'
 					});
 				}
+				label.innerHTML = XtrGraficoUtil.remover(label.innerHTML,"{{","}}");
 				newLabel.innerHTML = label.innerHTML;
 
 				label.style.setProperty("display","none");

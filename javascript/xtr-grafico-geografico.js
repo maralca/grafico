@@ -84,6 +84,8 @@ function geoAreaGrafico(compositeData,kwargs){
     isMuni = false;
     isEstado = false;
 
+    console.log(propName);
+
     if(propName.indexOf("municipios") >= 0 || propName.indexOf("microrregioes") >= 0){
         if(propName.indexOf("mesorregioes") >= 0){
             var mesoTarget = tipo.split("/");
@@ -107,6 +109,24 @@ function geoAreaGrafico(compositeData,kwargs){
             isMeso = true;
         }
         if(propName.indexOf("microrregioes") >= 0){
+             var microTarget = tipo.split("/");
+            microTarget = microTarget.pop();
+
+            microTarget = microTarget.replace("-","/").replace(/_/g," ");
+
+            var cidadesToShow = [];
+
+            info = info.filter(function(item){
+                var itemMeso;
+
+                itemMeso = item.microrregiao.toLowerCase();
+
+                if(itemMeso == mesoTarget){
+                    cidadesToShow.push(item.id);
+                    return true;
+                }
+                return false;
+            });
             propName = "microrregiao";
             isMicro = true;
         }
@@ -118,12 +138,14 @@ function geoAreaGrafico(compositeData,kwargs){
     else if(propName.indexOf("mesorregioes") >= 0){
 
         propName = "mesorregiao";
+        isMeso = true;
     }
     if(propName.indexOf("estados") >= 0){
         isEstado = true;
     }
 
-    /*console.info({
+   /* console.info({
+        propName: propName,
         estado: isEstado,
         meso: isMeso,
         micro: isMicro,
@@ -490,8 +512,8 @@ function geoAreaGrafico(compositeData,kwargs){
 
     refX =   grafico.offsetWidth  * 0.9 / BBoxScale.width;
     refY = - grafico.offsetHeight * 0.9 / BBoxScale.height;
-
-    if(refX >= refY && !isMicro){
+    
+    if(refX >= refY && !isMuni && !isMeso && !isMicro){
         refX = -refY;
     }
     else{
@@ -553,11 +575,15 @@ function paramTooltip(Rotulo,TituloIdentificador,Titulo,Valor,Unidade){
         Valor = Valor > 1 ? Valor.toFixed(0) : Valor.toFixed(3);
     }
     catch(e){}
+    var tooltip = xtrGrafico.getTooltip({
+        titulo: TituloIdentificador,
+        rotulo: Rotulo,
+        nome: Titulo,
+        unidade: Unidade,
+        valor: Valor
+    });
 
-    return {
-        content: "<p>"+TituloIdentificador+"&nbsp;:&nbsp;"+Rotulo+"</p>"
-        +"<p>"+Titulo+"<span class='sub'>("+Unidade+")</span>"+"&nbsp;:&nbsp;"+Valor+"</p>"
-    }
+    return {content: tooltip};
 
 }
 
@@ -766,7 +792,7 @@ function geoAreaLegenda(compositeData,kwargs){
         x: width/2,
         y: height + 16
     });
-    text.innerHTML = unidade;
+    text.innerHTML = unidade.replace("[","").replace("]","");
 
     text.setAttributeNS(null,"x",(width - text.getBBox().width - 20)/2);
 
